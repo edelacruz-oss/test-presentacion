@@ -1,79 +1,65 @@
-# Guía del movimiento cinematográfico
+# Guía de transición estandarizada para laptop
 
-## Arquitectura
+## Principio de funcionamiento
 
-La transición utiliza dos capas:
+La versión anterior interpretaba directamente la cantidad de desplazamiento producida por cada mouse o trackpad. Eso podía hacer que el ritmo se sintiera diferente al cambiar entre una TV y una laptop.
 
-### 1. Movimiento físico
+Esta edición utiliza navegación por escenas:
 
-`cinematic-scroll.js` recibe la rueda, el trackpad o la navegación por teclado y genera una trayectoria continua.
+1. Un gesto de scroll identifica la dirección.
+2. Se selecciona una sola escena anterior o siguiente.
+3. El movimiento completo se ejecuta durante un tiempo fijo.
+4. Mientras la transición está activa, las órdenes adicionales se bloquean.
 
-### 2. Movimiento visual
+El resultado es consistente sin importar la resolución.
 
-`app.js` suaviza nuevamente el progreso de cada escena. Por eso los elementos no reaccionan de golpe aunque el usuario mueva la rueda rápidamente.
+## Ajuste principal
 
-## Configuración principal
-
-Edita `configuracion.js`.
-
-### Ritmo de rueda y trackpad
+En `configuracion.js`:
 
 ```js
-smoothScroll: {
-  wheelMultiplier: 0.56,
-  response: 6.4,
-  maxSpeedPxPerSecond: 1550
+timing: {
+  standardTransitionDurationMs: 2400,
+  lockInputDuringTransition: true
 }
 ```
 
-- `wheelMultiplier`: sensibilidad del dispositivo.
-- `response`: rapidez con la que el movimiento alcanza el destino.
-- `maxSpeedPxPerSecond`: límite para evitar desplazamientos agresivos.
+`standardTransitionDurationMs` controla simultáneamente:
 
-### Flechas y teclado
+- scroll y trackpad;
+- flechas del teclado;
+- barra espaciadora;
+- controles de la pantalla del presentador;
+- saltos programáticos entre escenas.
 
-```js
-navigationDurationMs: 2450,
-navigationEase: 'sine'
-```
-
-La curva `sine` mantiene una aceleración y frenado suaves.
-
-### Duración de una escena
+## Valores recomendados
 
 ```js
-sceneScrollHeightVh: 188,
-chapterIntroScrollHeightVh: 160,
-coverScrollHeightVh: 196
+standardTransitionDurationMs: 2000 // Ágil
+standardTransitionDurationMs: 2200 // Suave
+standardTransitionDurationMs: 2400 // Recomendado para laptop
+standardTransitionDurationMs: 2600 // Inmersivo
+standardTransitionDurationMs: 2800 // Cinematográfico
 ```
 
-Una altura mayor prolonga la entrada, la permanencia y la salida.
-
-### Aparición y desaparición
+## Sensibilidad del scroll
 
 ```js
-enterStart: 0.015,
-enterEnd: 0.34,
-exitStart: 0.66,
-exitEnd: 0.985
+wheelStepThresholdPx: 46,
+wheelGestureCooldownMs: 360
 ```
 
-La escena utiliza aproximadamente:
+- `wheelStepThresholdPx` determina cuánto debe moverse la rueda antes de cambiar de escena.
+- `wheelGestureCooldownMs` evita que la inercia del trackpad active una segunda transición.
 
-- 32.5% del recorrido para aparecer;
-- 32% para permanecer estable;
-- 32.5% para desaparecer.
+No es necesario modificar estos valores para el uso normal en laptop.
 
-### Suavizado visual
+## Altura uniforme
 
 ```js
-visualResponse: 7.2
+sceneScrollHeightVh: 168,
+chapterIntroScrollHeightVh: 168,
+coverScrollHeightVh: 168
 ```
 
-- `5.5`: muy flotante.
-- `7.2`: inmersivo recomendado.
-- `9`: más inmediato.
-
-## Configuración entregada
-
-La versión actual está preparada para proyector, mouse convencional y trackpad. Antes de modificarla, prueba la presentación en pantalla completa.
+Al mantener la misma altura relativa, portada, introducciones y contenido recorren una distancia visual equivalente.

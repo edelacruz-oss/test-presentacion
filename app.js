@@ -5,16 +5,26 @@
   if (!data?.chapters?.length) throw new Error('No se encontró la información de la presentación.');
 
   const CONFIG = window.CEDRUS_PRESENTATION_CONFIG || {};
+  const timingConfig = {
+    standardTransitionDurationMs: 2400,
+    lockInputDuringTransition: true,
+    ...(CONFIG.timing || {})
+  };
+  const standardTransitionDurationMs = Math.max(600, Number(timingConfig.standardTransitionDurationMs) || 2400);
   const smoothScrollConfig = {
     enabled: true,
-    wheelMultiplier: 0.56,
-    wheelMaxStepPx: 230,
-    response: 6.4,
-    maxSpeedPxPerSecond: 1550,
-    navigationDurationMs: 2450,
+    wheelMode: 'scene',
+    wheelStepThresholdPx: 46,
+    wheelGestureCooldownMs: 360,
+    wheelMultiplier: 0.50,
+    wheelMaxStepPx: 180,
+    response: 7.4,
+    maxSpeedPxPerSecond: 1320,
+    navigationDurationMs: standardTransitionDurationMs,
     navigationEase: 'sine',
-    stopThresholdPx: 0.10,
-    ...(CONFIG.smoothScroll || {})
+    stopThresholdPx: 0.08,
+    ...(CONFIG.smoothScroll || {}),
+    navigationDurationMs: standardTransitionDurationMs
   };
   const transitionConfig = {
     sceneScrollHeightVh: 188,
@@ -729,6 +739,7 @@
     cinematicScroll = new window.CedrusCinematicScroll({
       ...smoothScrollConfig,
       preventSelector: '[data-native-scroll], input, textarea, select, option',
+      onStep: direction => direction > 0 ? goNext() : goPrev(),
       onUpdate: frame => updateScrollScrub(frame)
     });
     cinematicScroll.requestFrame();
@@ -806,14 +817,23 @@
     return window.scrollY + rect.top - targetRectTop;
   }
 
-  function scrollToNavigationIndex(index, durationMs = smoothScrollConfig.navigationDurationMs) {
+  function isTransitionInProgress() {
+    return Boolean(cinematicScroll?.isNavigating || fallbackNavigationFrame !== null);
+  }
+
+  function scrollToNavigationIndex(index, durationMs = standardTransitionDurationMs) {
+    const isImmediate = durationMs <= 0;
+    if (!isImmediate && timingConfig.lockInputDuringTransition && isTransitionInProgress()) return false;
+
     const clampedIndex = Math.max(0, Math.min(navigationScenes.length - 1, index));
     const record = navigationScenes[clampedIndex];
-    if (!record?.element) return;
-    navigationCursorIndex = clampedIndex;
+    if (!record?.element) return false;
+    if (!isImmediate && clampedIndex === navigationCursorIndex) return false;
 
-    if (durationMs <= 0) setActiveScene(record);
-    animateWindowScroll(getSceneFocusScrollY(record.element), durationMs);
+    navigationCursorIndex = clampedIndex;
+    if (isImmediate) setActiveScene(record);
+    animateWindowScroll(getSceneFocusScrollY(record.element), isImmediate ? 0 : standardTransitionDurationMs);
+    return true;
   }
 
   function scrollToPosition(chapterIndex, slideIndex) {
@@ -826,11 +846,11 @@
   }
 
   function goNext() {
-    scrollToNavigationIndex(navigationCursorIndex + 1);
+    return scrollToNavigationIndex(navigationCursorIndex + 1);
   }
 
   function goPrev() {
-    scrollToNavigationIndex(navigationCursorIndex - 1);
+    return scrollToNavigationIndex(navigationCursorIndex - 1);
   }
 
   function goChapter(chapterIndex) {
@@ -1000,7 +1020,6 @@
   }
 
 
-  window.addEventListener('wheel', cancelProgrammaticScroll, { passive: true });
   window.addEventListener('touchstart', cancelProgrammaticScroll, { passive: true });
   window.addEventListener('pointerdown', event => {
     if (event.pointerType === 'touch' || event.pointerType === 'pen') cancelProgrammaticScroll();

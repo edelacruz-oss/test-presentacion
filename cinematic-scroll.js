@@ -11,6 +11,9 @@
     constructor(options = {}) {
       this.options = {
         enabled: true,
+        wheelMode: 'free',
+        wheelStepThresholdPx: 46,
+        wheelGestureCooldownMs: 360,
         wheelMultiplier: 0.58,
         wheelMaxStepPx: 260,
         response: 6.6,
@@ -19,6 +22,7 @@
         navigationDurationMs: 2300,
         navigationEase: 'sine',
         preventSelector: '[data-native-scroll], input, textarea, select, option',
+        onStep: null,
         onUpdate: null,
         ...options
       };
@@ -32,6 +36,9 @@
       this.navigation = null;
       this.isApplying = false;
       this.destroyed = false;
+      this.wheelAccumulator = 0;
+      this.wheelResetTimer = null;
+      this.wheelLockUntil = 0;
 
       this.handleWheel = this.handleWheel.bind(this);
       this.handleNativeScroll = this.handleNativeScroll.bind(this);
@@ -71,12 +78,48 @@
       if (Math.abs(event.deltaY) < 0.01) return;
 
       event.preventDefault();
-      this.cancelNavigation();
+      const normalizedDelta = this.normalizeWheel(event);
 
-      const rawDelta = this.normalizeWheel(event) * this.options.wheelMultiplier;
+      if (this.options.wheelMode === 'scene' && typeof this.options.onStep === 'function') {
+        const now = performance.now();
+        const direction = Math.sign(normalizedDelta);
+        if (!direction) return;
+
+        if (this.isNavigating || now < this.wheelLockUntil) {
+          this.resetWheelAccumulatorSoon();
+          return;
+        }
+
+        if (this.wheelAccumulator && Math.sign(this.wheelAccumulator) !== direction) {
+          this.wheelAccumulator = 0;
+        }
+
+        this.wheelAccumulator += normalizedDelta;
+        this.resetWheelAccumulatorSoon();
+
+        if (Math.abs(this.wheelAccumulator) >= Math.max(1, this.options.wheelStepThresholdPx)) {
+          this.wheelAccumulator = 0;
+          const accepted = this.options.onStep(direction) !== false;
+          if (accepted) {
+            this.wheelLockUntil = now + this.options.navigationDurationMs + this.options.wheelGestureCooldownMs;
+          }
+        }
+        return;
+      }
+
+      this.cancelNavigation();
+      const rawDelta = normalizedDelta * this.options.wheelMultiplier;
       const delta = clamp(rawDelta, -this.options.wheelMaxStepPx, this.options.wheelMaxStepPx);
       this.target = clamp(this.target + delta, 0, this.maxScroll);
       this.requestFrame();
+    }
+
+    resetWheelAccumulatorSoon() {
+      if (this.wheelResetTimer !== null) clearTimeout(this.wheelResetTimer);
+      this.wheelResetTimer = window.setTimeout(() => {
+        this.wheelAccumulator = 0;
+        this.wheelResetTimer = null;
+      }, 180);
     }
 
     handleNativeScroll() {
@@ -199,6 +242,7 @@
     destroy() {
       this.destroyed = true;
       if (this.frame !== null) cancelAnimationFrame(this.frame);
+      if (this.wheelResetTimer !== null) clearTimeout(this.wheelResetTimer);
       window.removeEventListener('wheel', this.handleWheel);
       window.removeEventListener('scroll', this.handleNativeScroll);
       window.removeEventListener('resize', this.handleResize);

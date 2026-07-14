@@ -1,0 +1,10 @@
+CEDRUS CINEMATIC FLOW · LAPTOP STANDARD EDITION
+
+1. Se estableció una duración fija de 2400 ms para todas las transiciones.
+2. Scroll, teclado y controles del presentador comparten exactamente el mismo motor.
+3. Cada gesto de scroll cambia una sola escena.
+4. Se bloquean nuevas órdenes mientras la transición está en curso.
+5. Se agregó protección contra la inercia del trackpad.
+6. Portada, introducciones y escenas usan una altura uniforme de 168vh.
+7. La transición ya no cambia de velocidad por resolución o tamaño de pantalla.
+8. Se conservaron las animaciones variables, partículas y notas del presentador.

@@ -1,49 +1,47 @@
-# Cedrus Immersive Presentation — Cinematic Flow V3
+# Cedrus Immersive Presentation — Laptop Standard Edition
 
-Esta versión reemplaza la sensación de salto entre escenas por un movimiento continuo, progresivo e inmersivo.
+Esta versión conserva el diseño y la experiencia **Cinematic Flow**, pero estandariza el ritmo de las transiciones para que se vea fluido en una laptop, aunque cambie la resolución, el tamaño del monitor o el dispositivo de salida.
 
-## Qué se corrigió
+## Qué cambió
 
-- La rueda y el trackpad ya no trasladan la página de forma inmediata.
-- Las flechas, espacio y controles del presentador usan el mismo ritmo cinematográfico.
-- La escena no responde de manera brusca al desplazamiento real: existe una segunda interpolación visual.
-- Los títulos, textos, tarjetas, métricas e imágenes aparecen paulatinamente.
-- La salida de cada bloque es gradual y se cruza suavemente con la siguiente escena.
-- Las introducciones de cada capítulo siguen formando parte de la secuencia de navegación.
+- Scroll, teclado y controles del presentador utilizan el mismo tiempo de transición.
+- Cada gesto de scroll avanza o retrocede exactamente una escena.
+- La duración ya no depende de la cantidad de píxeles que envíe la rueda o el trackpad.
+- La navegación se bloquea temporalmente durante la animación para impedir saltos o aceleraciones.
+- La inercia del trackpad no puede disparar dos escenas consecutivas.
+- Portada, introducciones de sección y momentos de contenido usan una altura visual uniforme.
 - Se conservaron las entradas desde arriba, izquierda, derecha y centro.
+- Se mantiene la corrección de los controles del presentador para avanzar de uno en uno.
 
-## Motor integrado
+## Tiempo estándar aplicado
 
-Se agregó el archivo:
-
-```text
-cinematic-scroll.js
-```
-
-Este archivo funciona como una pequeña librería interna y controla:
-
-- suavizado de rueda y trackpad;
-- velocidad máxima;
-- amortiguación del movimiento;
-- navegación animada mediante teclado;
-- sincronización con la animación de cada escena.
-
-No requiere conexión a internet ni dependencias externas.
-
-## Configuración
-
-Todos los ajustes están en:
+Todas las transiciones duran:
 
 ```text
-configuracion.js
+2400 ms · 2.4 segundos
 ```
 
-La configuración entregada ya está calibrada para una experiencia fluida y no agresiva.
+Este valor está pensado para laptops de uso común y presentaciones en pantalla completa.
+
+## Cambiar la velocidad
+
+Abre `configuracion.js` y modifica únicamente:
+
+```js
+standardTransitionDurationMs: 2400
+```
+
+Valores útiles:
+
+- `2000`: fluido y un poco más ágil.
+- `2400`: equilibrio recomendado.
+- `2800`: más lento y cinematográfico.
 
 ## Controles
 
-- Scroll / trackpad: desplazamiento cinematográfico.
-- Flechas `↑`, `↓`, `←`, `→`: escena anterior o siguiente.
+- Scroll hacia abajo: siguiente escena.
+- Scroll hacia arriba: escena anterior.
+- Flechas `↑`, `↓`, `←`, `→`: anterior o siguiente.
 - Espacio: avanzar.
 - `P`: pantalla del presentador.
 - `F`: pantalla completa.

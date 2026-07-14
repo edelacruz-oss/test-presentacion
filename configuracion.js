@@ -1,87 +1,93 @@
 /* ========================================================================
-   CONFIGURACIÓN DE LA EXPERIENCIA CINEMATOGRÁFICA
+   CONFIGURACIÓN ESTÁNDAR PARA LAPTOP · CEDRUS CINEMATIC FLOW
    ========================================================================
 
-   Esta versión utiliza dos capas de suavizado:
+   Esta versión ya no calcula la sensación de velocidad con base en la
+   resolución o la altura de la pantalla. La rueda, las flechas del teclado
+   y los controles del presentador avanzan siempre una escena mediante una
+   transición de duración fija.
 
-   1) MOVIMIENTO DE LA PÁGINA
-      El motor cinematic-scroll.js suaviza rueda, trackpad y navegación por teclado.
-
-   2) APARICIÓN DE ELEMENTOS
-      app.js interpola gradualmente el progreso visual de cada escena.
-
-   Los valores incluidos están calibrados para una transición inmersiva, constante
-   y sin cambios agresivos. Edita únicamente este archivo para ajustar el ritmo.
+   AJUSTE PRINCIPAL:
+   - standardTransitionDurationMs controla el tiempo de TODAS las transiciones.
+   - 2200 a 2600 ms ofrece una experiencia fluida y cinematográfica.
    ======================================================================== */
 
 window.CEDRUS_PRESENTATION_CONFIG = {
+  timing: {
+    // Tiempo estándar para scroll, teclado y pantalla del presentador.
+    standardTransitionDurationMs: 2400,
+
+    // Durante la transición se bloquean nuevas órdenes para evitar saltos.
+    lockInputDuringTransition: true
+  },
+
   smoothScroll: {
     enabled: true,
 
-    // Sensibilidad de la rueda o trackpad. Menor = recorrido más calmado.
-    wheelMultiplier: 0.56,
+    // La rueda funciona por escenas, no por cantidad de píxeles recorridos.
+    // Así el resultado es el mismo en laptop, TV o proyector.
+    wheelMode: 'scene',
 
-    // Limita saltos grandes provocados por ciertas ruedas de mouse.
-    wheelMaxStepPx: 230,
+    // Movimiento mínimo acumulado para interpretar un gesto de scroll.
+    wheelStepThresholdPx: 46,
 
-    // Qué tan rápido el movimiento alcanza el punto solicitado por el scroll.
-    // 5.5 = muy flotante, 6.6 = recomendado, 8 = más directo.
-    response: 6.4,
+    // Evita que la inercia del trackpad dispare dos escenas seguidas.
+    wheelGestureCooldownMs: 360,
 
-    // Velocidad máxima del movimiento generado por rueda o trackpad.
-    maxSpeedPxPerSecond: 1550,
+    // Estos valores se mantienen para desplazamientos nativos excepcionales.
+    wheelMultiplier: 0.50,
+    wheelMaxStepPx: 180,
+    response: 7.4,
+    maxSpeedPxPerSecond: 1320,
 
-    // Duración al avanzar con flechas, espacio o control del presentador.
-    navigationDurationMs: 2450,
-
-    // "sine" es más continuo y elegante. "quint" es más cinematográfico.
+    // Se sobrescribe automáticamente con standardTransitionDurationMs.
+    navigationDurationMs: 2400,
     navigationEase: 'sine',
-
-    stopThresholdPx: 0.10
+    stopThresholdPx: 0.08
   },
 
   transition: {
-    // Distancia disponible para que cada escena aparezca, permanezca y salga.
-    sceneScrollHeightVh: 188,
-    chapterIntroScrollHeightVh: 160,
-    coverScrollHeightVh: 196,
+    // Todas las escenas tienen la misma altura relativa para que la distancia
+    // visual sea constante en pantallas de laptop.
+    sceneScrollHeightVh: 168,
+    chapterIntroScrollHeightVh: 168,
+    coverScrollHeightVh: 168,
 
     mobileSceneScrollHeightVh: 150,
-    mobileChapterIntroScrollHeightVh: 132,
-    mobileCoverScrollHeightVh: 164,
+    mobileChapterIntroScrollHeightVh: 150,
+    mobileCoverScrollHeightVh: 150,
 
-    // Entrada prolongada, zona central estable y salida progresiva.
-    enterStart: 0.015,
-    enterEnd: 0.34,
-    exitStart: 0.66,
-    exitEnd: 0.985,
+    // Entrada amplia, pausa visual y salida progresiva.
+    enterStart: 0.02,
+    enterEnd: 0.36,
+    exitStart: 0.64,
+    exitEnd: 0.98,
 
-    // Aparición escalonada de títulos, textos y tarjetas.
-    itemEnterStart: 0.045,
-    itemEnterEnd: 0.33,
-    itemExitStart: 0.69,
-    itemExitEnd: 0.975,
-    itemStagger: 0.012,
+    // Aparición escalonada de títulos, textos, tarjetas y métricas.
+    itemEnterStart: 0.055,
+    itemEnterEnd: 0.35,
+    itemExitStart: 0.67,
+    itemExitEnd: 0.97,
+    itemStagger: 0.011,
 
-    // Respuesta visual independiente del movimiento físico de la página.
-    // Menor = mayor flotación; mayor = sigue el scroll con más rapidez.
-    visualResponse: 7.2,
+    // Sigue el movimiento de forma suave sin quedarse rezagado.
+    visualResponse: 10.5,
 
-    visibilityThreshold: 0.025,
-    focusThreshold: 0.68
+    visibilityThreshold: 0.02,
+    focusThreshold: 0.67
   },
 
   motion: {
-    // Distancias moderadas para evitar entradas agresivas.
-    horizontalDistancePx: 82,
-    verticalDistancePx: 62,
-    sceneBlurPx: 10,
-    itemBlurPx: 5,
+    // Distancias moderadas para una transición elegante en laptop.
+    horizontalDistancePx: 68,
+    verticalDistancePx: 52,
+    sceneBlurPx: 8,
+    itemBlurPx: 4,
 
-    centerOutStartScale: 0.90,
-    centerOutExitScale: 1.065,
-    centerInStartScale: 1.065,
-    centerInExitScale: 0.92
+    centerOutStartScale: 0.925,
+    centerOutExitScale: 1.045,
+    centerInStartScale: 1.045,
+    centerInExitScale: 0.94
   },
 
   styleSequence: [
