@@ -1,0 +1,18 @@
+IMÁGENES REEMPLAZABLES
+=====================
+
+Puedes agregar imágenes sin editar el código. Colócalas en esta carpeta con uno de estos nombres:
+
+- idiomas-londres-01.webp
+- idiomas-londres-02.webp
+- idiomas-intercambio-01.webp
+
+También se aceptan las extensiones .png, .jpg o .jpeg.
+
+Recomendación:
+- Formato horizontal 16:9 o 3:2.
+- Resolución mínima de 1600 px de ancho.
+- Evita colocar texto importante cerca de los bordes.
+- Para mayor velocidad, utiliza WebP.
+
+La presentación detectará automáticamente los archivos cuando vuelva a cargarse.

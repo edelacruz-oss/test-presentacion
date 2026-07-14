@@ -1,0 +1,16 @@
+CEDRUS CINEMATIC FLOW V3
+
+1. Se agregó cinematic-scroll.js como motor interno de desplazamiento.
+2. Scroll, trackpad y teclado ahora producen movimiento continuo y amortiguado.
+3. Se eliminó la respuesta visual directa que provocaba cambios bruscos.
+4. Cada escena tiene una segunda interpolación de progreso.
+5. Se ampliaron las zonas de entrada y salida.
+6. Se redujeron distancias, escala y desenfoque para una animación más elegante.
+7. Se agregó una configuración central en configuracion.js.
+8. La secuencia conserva portada, introducciones y contenido de cada capítulo.
+
+CORRECCIÓN V3.1 · CONTROL DEL PRESENTADOR
+- Se corrigió el cambio doble al presionar los botones "Momento".
+- Cada orden ahora incluye un identificador único.
+- La pantalla pública descarta el mensaje duplicado que podía llegar simultáneamente por BroadcastChannel y localStorage.
+- Los controles avanzan o retroceden exactamente un momento por clic.

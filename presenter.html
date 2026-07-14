@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control del presentador · Cedrus</title>
+  <link rel="stylesheet" href="presenter.css" />
+</head>
+<body>
+  <main class="presenter-shell">
+    <header>
+      <div class="presenter-brand"><span>C</span><div><strong>CEDRUS</strong><small>CONTROL DEL PRESENTADOR</small></div></div>
+      <div class="connection"><i id="connectionDot"></i><span id="connectionLabel">Conectando…</span></div>
+    </header>
+
+    <section class="presenter-grid">
+      <article class="current-card">
+        <div class="card-label"><span>EN PANTALLA</span><strong id="currentPosition">01 · 01</strong></div>
+        <div id="currentPreview" class="preview"></div>
+      </article>
+
+      <article class="next-card">
+        <div class="card-label"><span>SIGUIENTE</span><strong id="nextPosition">01 · 02</strong></div>
+        <div id="nextPreview" class="preview preview-next"></div>
+      </article>
+
+      <article class="notes-card">
+        <div class="card-label"><span>GUÍA DEL PRESENTADOR</span><strong id="speakerLabel">Miss Joanna</strong></div>
+        <div id="notesList" class="notes-list"></div>
+      </article>
+
+      <article class="control-card">
+        <div class="card-label"><span>CONTROL</span><strong id="chapterDuration">4 min</strong></div>
+        <div class="timer-panel">
+          <div id="presenterTimer" class="presenter-timer">04:00</div>
+          <div class="timer-status" id="timerStatus">Listo</div>
+          <div class="total-time">Tiempo total <strong id="totalElapsed">00:00:00</strong></div>
+          <div class="timer-controls">
+            <button id="timerToggle" class="primary">Iniciar</button>
+            <button id="timerReset">Reiniciar</button>
+            <button id="timerTotalReset">Reiniciar total</button>
+          </div>
+          <div class="timer-config">
+            <label>Minutos <input id="minutesInput" type="number" min="0" max="99" value="4"></label>
+            <label>Segundos <input id="secondsInput" type="number" min="0" max="59" value="0"></label>
+            <button id="applyTime">Aplicar tiempo</button>
+          </div>
+          <label class="switch-line">
+            <input id="autoResetToggle" type="checkbox" checked>
+            <span></span>
+            Reiniciar automáticamente al cambiar participante
+          </label>
+        </div>
+        <div class="nav-controls">
+          <button id="prevChapter">← Participante</button>
+          <button id="prevSlide">↑ Momento</button>
+          <button id="nextSlide" class="primary">Momento ↓</button>
+          <button id="nextChapter">Participante →</button>
+        </div>
+        <div class="utility-controls">
+          <button id="blackoutButton">Pantalla negra</button>
+          <button id="fullscreenRemote">Pantalla completa</button>
+          <button id="returnStart">Ir al inicio</button>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script src="data.js"></script>
+  <script src="presenter.js"></script>
+</body>
+</html>

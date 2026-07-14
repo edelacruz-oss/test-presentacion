@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050816" />
+  <title>Informe Anual · Bachillerato Cedrus</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="ambientCanvas" aria-hidden="true"></canvas>
+  <div class="space-gradient" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div id="cursorGlow" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand" aria-label="Instituto Cedrus">
+      <span class="brand-mark">C</span>
+      <span class="brand-copy">
+        <strong>CEDRUS</strong>
+        <small>INFORME ANUAL · LANDING EXPERIENCE</small>
+      </span>
+    </div>
+
+    <div class="topbar-center">
+      <div class="live-chip">
+        <span class="live-dot"></span>
+        <span id="chapterCounter">01 / 13</span>
+        <span class="live-separator">·</span>
+        <span id="slideCounter">01 / 04</span>
+      </div>
+      <div class="live-meta">
+        <strong id="chapterTitle">Bienvenida y apertura</strong>
+        <small><span id="speakerName">Miss Joanna</span> · <span id="slideLabel">Apertura</span></small>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="timer-chip" id="timerChip" title="El temporizador se controla desde la pantalla del presentador">
+        <span class="timer-dot"></span>
+        <strong id="timerDisplay">04:00</strong>
+      </div>
+      <button class="icon-button" id="presenterButton" title="Abrir pantalla del presentador (P)">P</button>
+      <button class="icon-button" id="fullscreenButton" title="Pantalla completa (F)">⛶</button>
+    </div>
+  </header>
+
+  <main id="scrollRoot" class="scroll-root" aria-live="polite"></main>
+
+  <div id="blackout" class="blackout" aria-hidden="true">
+    <span>CEDRUS</span>
+  </div>
+
+  <div id="shortcutHelp" class="shortcut-help" aria-hidden="true">
+    <div>
+      <strong>Controles</strong>
+      <span>Scroll: controlar aparición y salida</span>
+      <span>↑ ↓ / ← → / Espacio: escena anterior o siguiente</span>
+      <span>F: pantalla completa</span>
+      <span>P: presentador</span>
+      <span>B: pantalla negra</span>
+      <span>H: ayuda</span>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="configuracion.js"></script>
+  <script src="cinematic-scroll.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

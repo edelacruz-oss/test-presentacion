@@ -1,0 +1,15 @@
+CORRECCIÓN DE CONTROLES · V3.1
+
+Problema corregido:
+Los botones de momento de la pantalla del presentador enviaban la misma orden por dos mecanismos de sincronización: BroadcastChannel y localStorage. La vista pública procesaba ambas órdenes y avanzaba dos momentos.
+
+Solución aplicada:
+1. Cada orden del presentador genera un commandId único.
+2. La presentación registra temporalmente los commandId procesados.
+3. Si la misma orden llega por el canal alternativo, se descarta.
+
+Resultado:
+- Momento siguiente: avanza uno.
+- Momento anterior: retrocede uno.
+- Participante siguiente/anterior: se ejecuta una sola vez.
+- Pantalla negra y pantalla completa: no se duplican.
