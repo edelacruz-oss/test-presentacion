@@ -1,0 +1,16 @@
+CAMBIOS REALIZADOS
+
+1. Sección 12.05 · Admisiones:
+   - Tarjetas centradas en una cuadrícula 3 × 2 para laptop.
+   - Diseño adaptable a 2 columnas y 1 columna en pantallas menores.
+   - Etiquetas corregidas para iniciar con mayúscula.
+
+2. Secciones 10.05 y 08.05:
+   - Etiquetas de tarjetas corregidas para iniciar con mayúscula.
+
+3. Sección 03.04 · Aprender inglés viviendo el mundo:
+   - Se eliminó únicamente el texto genérico «Fotografía del informe anual» de las tres imágenes.
+
+4. Sección 01.02 · Nuestra historia:
+   - «Casi 14 años» se sustituyó por «13 años».
+   - El resto del texto se mantuvo sin cambios.

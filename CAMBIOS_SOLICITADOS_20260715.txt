@@ -1,0 +1,29 @@
+CAMBIOS APLICADOS
+
+1. Portada:
+- Se eliminó el texto “Presentación ejecutiva inmersiva con navegación por scroll.”
+- Se eliminaron los chips/botones “Instituto Cedrus”, “Executive Future” y “Desplázate para continuar”.
+
+2. DACO:
+- Se añadió una nueva evidencia visual enfocada en “X-Plica: dominio más allá del aula”.
+- Se integraron 5 evidencias visuales de canales/equipos de X-Plica.
+
+3. Pensamiento emprendedor · Academia Económico–Administrativa:
+- Se corrigieron evidencias para evitar repeticiones.
+- Se respetó la imagen del apartado 06.03 · Logro del ciclo.
+
+4. 07.02 · Evidencia visual · 2/2:
+- Se eliminó la imagen “Reconocimiento académico”.
+
+5. 09.01 · Evidencia visual · 1/2:
+- Se eliminó la imagen duplicada del genio azul para evitar repetición.
+
+6. 11.02 · Filosofía:
+- Se colocó del lado izquierdo la imagen “Servir por amor” proporcionada por el usuario.
+
+7. 12.04 · Evidencia visual:
+- Se retiró la fotografía no correspondiente.
+- Se agregaron las dos gráficas del documento.
+
+8. 13.05 · Cierre y agradecimiento:
+- Se cambió el texto final por “Gracias por creer en Bachillerato Cedrus.”

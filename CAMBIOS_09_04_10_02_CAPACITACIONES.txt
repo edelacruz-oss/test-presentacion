@@ -1,0 +1,19 @@
+AJUSTES REALIZADOS
+
+1. Sección 09.04 · Alianzas que amplifican el impacto
+- Se agregó una sección independiente de evidencia visual después del contenido.
+- Incluye seis fotografías reales del apartado de talleres, conferencias y acompañamiento a madres y padres de familia.
+- Las imágenes se muestran en un collage de dos filas para mantenerlas visibles y diferenciadas.
+
+2. Sección 10.02 · Tres ejes de acción
+- Se agregó una fotografía en el lado izquierdo.
+- Los tres ejes se reorganizan verticalmente para conservar una lectura clara y evitar que las tarjetas se compriman.
+
+3. Sección 10.05 · Capacitaciones y formación continua
+- Se retiraron las fotografías que no correspondían a ese apartado.
+- Se utilizaron exclusivamente imágenes ubicadas dentro de la sección de Gestión de la Calidad Docente, capacitación, diplomado y taller de Marketing Educativo del documento original.
+- Las evidencias se dividieron en dos collages de cuatro fotografías para que todas se distingan correctamente.
+
+4. Validación
+- Todos los recursos visuales referenciados existen dentro de assets.
+- app.js, data.js, presenter.js, cinematic-scroll.js y configuracion.js superaron la validación de sintaxis.

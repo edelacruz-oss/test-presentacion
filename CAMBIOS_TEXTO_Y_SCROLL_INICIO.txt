@@ -1,0 +1,13 @@
+CAMBIOS FINALES · PANTALLA INICIAL Y HEADER
+
+1. Header:
+- Se eliminó el texto “LANDING EXPERIENCE”.
+- Ahora únicamente se muestra “INFORME ANUAL”.
+
+2. Pantalla inicial:
+- Se eliminó el texto “EXPERIENCIA INMERSIVA”.
+- Ahora únicamente se muestra “PRESENTACIÓN ANUAL”.
+
+3. Barra de desplazamiento:
+- Se ocultó la barra visible de la pantalla inicial.
+- Se conserva la adaptación del contenido en pantallas pequeñas sin mostrar una barra visual.

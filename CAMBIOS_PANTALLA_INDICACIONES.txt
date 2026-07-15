@@ -1,0 +1,14 @@
+PANTALLA INICIAL · INDICACIONES GENERALES
+
+Cambios realizados:
+1. Se agregó una pantalla previa antes de la portada.
+2. La pantalla utiliza la imagen proporcionada con las indicaciones:
+   - Celular en silencio.
+   - Entradas y salidas con discreción.
+   - Atención plena.
+3. Se agregó el botón INICIO.
+4. Al seleccionar INICIO se muestra una transición de carga con el logo de Cedrus.
+5. Después de la carga, la presentación inicia automáticamente en la portada.
+6. Mientras la pantalla inicial está activa, el scroll y las teclas de navegación permanecen bloqueados.
+7. También se puede iniciar con Enter, Espacio, Flecha derecha o Flecha abajo.
+8. No se modificó el contenido ni el orden del resto de la presentación.

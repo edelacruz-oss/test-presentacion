@@ -1,0 +1,6 @@
+Se agregó un modo temporal de edición rápida.
+
+- Tecla E: activa o desactiva el desplazamiento inmediato.
+- En modo rápido, scroll, flechas y espacio cambian de escena sin transición.
+- Al presionar E nuevamente se restaura la animación estándar.
+- Se añadió la opción quickModeDefault en configuracion.js.

@@ -1,0 +1,30 @@
+CAMBIOS FINALES Y OPTIMIZACIÓN
+
+1. Pantalla de inicio
+- Se eliminó el texto: “También puedes iniciar con Enter, Espacio o flecha derecha.”
+
+2. Portada
+- Se actualizó el subtítulo a:
+  “Bachillerato INSTITUTO CEDRUS”.
+
+3. Vinculación · 12.05
+- Se eliminó completamente la escena adicional “EVIDENCIA VISUAL”.
+- Se conservaron las tarjetas y la información de Admisiones 2025–2026.
+
+4. Reconocimientos y experiencias en el Tec de Monterrey
+- Se eliminó la fotografía con el texto:
+  “Argumentación y comunicación en un entorno universitario.”
+
+5. Logotipo
+- Se sustituyó el logotipo anterior por una versión optimizada y transparente, creada a partir del PNG proporcionado.
+- Se adaptó su presentación en el header, pantalla inicial y animación de carga.
+
+6. Optimización de rendimiento
+- Se creó un manifiesto exacto de fotografías para evitar búsquedas y solicitudes fallidas por extensión.
+- Las imágenes se cargan con una cola limitada y se decodifican antes de mostrarse.
+- Las primeras escenas se preparan inmediatamente y el resto durante tiempos inactivos.
+- Las animaciones de fotografías se pausan cuando la escena está fuera de pantalla.
+- El motor de scroll deja de procesar escenas alejadas del viewport.
+- Se redujo el uso de capas permanentes de GPU.
+- Se optimizó el fondo de partículas y el seguimiento del cursor.
+- Se generaron versiones WebP de los recursos más pesados para reducir carga y decodificación.

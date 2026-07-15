@@ -1,0 +1,25 @@
+VERSIÓN ACTUALIZADA · MÁS EVIDENCIAS VISUALES
+
+Cambios solicitados:
+
+1. Sección 04.03 · DACO
+- Se reemplazó la evidencia anterior de La Casa Ideal.
+- Se incorporaron dos fotografías de “Vida y muerte en las diferentes culturas”.
+- Las dos imágenes se muestran simultáneamente en una composición de dos columnas.
+
+2. Sección 04.04 · Mental Kombat
+- Se corrigió la mayúscula inicial en los textos de las cuatro tarjetas:
+  Consideró, Volvería, Valoración y Materias.
+
+3. Sección 07.02 · Ciencias Sociales
+- Se conservó la primera evidencia de debates.
+- Se creó una segunda sección fotográfica con reconocimientos, visitas y presentaciones en el Tecnológico de Monterrey.
+
+4. Más contenido visual del documento
+- Se agregaron evidencias del proceso electoral estudiantil en Mentoría.
+- Se agregaron imágenes de promoción, convenios y continuidad institucional.
+- Se creó una segunda sección visual para Voluntariado Cedrus · Servir por Amor.
+
+5. Integridad del proyecto
+- Se conservaron textos, orden, transiciones, logo, pantalla del presentador y navegación.
+- Se verificó que todas las imágenes referenciadas estén incluidas en la carpeta assets.
