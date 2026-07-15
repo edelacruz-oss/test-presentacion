@@ -5,6 +5,11 @@
   if (!data?.chapters?.length) throw new Error('No se encontró la información de la presentación.');
 
   const CONFIG = window.CEDRUS_PRESENTATION_CONFIG || {};
+  const editingConfig = {
+    quickModeDefault: false,
+    shortcut: 'e',
+    ...(CONFIG.editing || {})
+  };
   const timingConfig = {
     standardTransitionDurationMs: 2400,
     lockInputDuringTransition: true,
@@ -73,7 +78,10 @@
     blackout: document.getElementById('blackout'),
     help: document.getElementById('shortcutHelp'),
     canvas: document.getElementById('ambientCanvas'),
-    cursorGlow: document.getElementById('cursorGlow')
+    cursorGlow: document.getElementById('cursorGlow'),
+    quickEditToast: document.getElementById('quickEditToast'),
+    instructionGate: document.getElementById('instructionGate'),
+    startPresentationButton: document.getElementById('startPresentationButton')
   };
 
   const state = {
@@ -85,10 +93,17 @@
     timerRemaining: data.chapters[0].duration * 60,
     timerRunning: false,
     blackout: false,
-    started: true
+    started: false,
+    quickEditMode: Boolean(editingConfig.quickModeDefault || new URLSearchParams(window.location.search).get('edicion') === '1')
   };
 
   const channel = 'BroadcastChannel' in window ? new BroadcastChannel('cedrus-presentation') : null;
+
+  if (els.instructionGate && !state.started) {
+    document.documentElement.classList.add('instructions-active');
+    els.instructionGate.hidden = false;
+    els.instructionGate.setAttribute('aria-hidden', 'false');
+  }
 
   // BroadcastChannel y localStorage se usan en paralelo como respaldo entre
   // ventanas. Este registro evita ejecutar dos veces el mismo comando.
@@ -161,7 +176,8 @@
     return media.length === 1 && layoutsWithRoom.has(slide.layout) ? 'side' : 'scene';
   }
 
-  function getFloatingSide(layoutVariant, flatIndex) {
+  function getFloatingSide(layoutVariant, flatIndex, slide = null) {
+    if (slide && ['left', 'right'].includes(slide.floatingSide)) return slide.floatingSide;
     if (layoutVariant === 'layout-left') return 'right';
     if (layoutVariant === 'layout-right') return 'left';
     return flatIndex % 2 === 0 ? 'right' : 'left';
@@ -263,7 +279,7 @@
         <div class="media-card__surface floating-photo__surface" data-media-key="${escapeHtml(item.key || '')}" style="--float-delay:${index * -1.7}s;--float-rotate:${index % 2 ? '1.1deg' : '-1.1deg'}">
           <div class="media-overlay anim-media-overlay">
             <span>${escapeHtml(item.label || 'Evidencia visual')}</span>
-            <small>${escapeHtml(item.caption || 'Fotografía del informe anual')}</small>
+            ${Object.prototype.hasOwnProperty.call(item, 'caption') && item.caption === '' ? '' : `<small>${escapeHtml(item.caption || 'Fotografía del informe anual')}</small>`}
           </div>
         </div>
       </article>`).join('')}</div>${caption ? `<div class="section-footnote reveal-item anim-item anim-footnote">${escapeHtml(caption)}</div>` : ''}`;
@@ -444,29 +460,115 @@
     }
   }
 
-  function hydrateMediaSlots(scope = document) {
-    const extensions = ['webp', 'png', 'jpg', 'jpeg'];
-    scope.querySelectorAll('[data-media-key]').forEach(slot => {
-      const key = slot.dataset.mediaKey;
-      if (!key) return;
-      let index = 0;
-      const probe = () => {
-        if (index >= extensions.length) {
-          slot.closest('.floating-photo, .media-card')?.classList.add('is-media-missing');
-          return;
-        }
-        const src = `assets/${key}.${extensions[index++]}`;
-        const image = new Image();
-        image.onload = () => {
-          slot.style.backgroundImage = `linear-gradient(180deg, rgba(4, 6, 16, .04), rgba(4, 6, 16, .58)), url("${src}")`;
+  const mediaAssetManifest = window.CEDRUS_MEDIA_MANIFEST || {};
+  const mediaDecodeCache = new Map();
+  const mediaLoadQueue = [];
+  let mediaLoadsInFlight = 0;
+  const MAX_CONCURRENT_MEDIA_LOADS = 4;
+
+  function pumpMediaLoadQueue() {
+    while (mediaLoadsInFlight < MAX_CONCURRENT_MEDIA_LOADS && mediaLoadQueue.length) {
+      const task = mediaLoadQueue.shift();
+      mediaLoadsInFlight += 1;
+
+      const image = new Image();
+      image.decoding = 'async';
+      image.onload = async () => {
+        try {
+          if (typeof image.decode === 'function') await image.decode();
+        } catch (_) {}
+        task.resolve(task.src);
+        mediaLoadsInFlight -= 1;
+        pumpMediaLoadQueue();
+      };
+      image.onerror = () => {
+        task.reject(new Error(`No se pudo cargar ${task.src}`));
+        mediaLoadsInFlight -= 1;
+        pumpMediaLoadQueue();
+      };
+      image.src = task.src;
+    }
+  }
+
+  function decodeMediaAsset(src) {
+    if (mediaDecodeCache.has(src)) return mediaDecodeCache.get(src);
+
+    const promise = new Promise((resolve, reject) => {
+      mediaLoadQueue.push({ src, resolve, reject });
+      pumpMediaLoadQueue();
+    });
+    mediaDecodeCache.set(src, promise);
+    return promise;
+  }
+
+  function markMissingMedia(slot) {
+    slot.closest('.floating-photo, .media-card')?.classList.add('is-media-missing');
+  }
+
+  function applyMediaToSlot(slot) {
+    if (!slot || slot.dataset.mediaHydrated === 'true' || slot.dataset.mediaHydrating === 'true') return;
+
+    const key = slot.dataset.mediaKey;
+    const src = mediaAssetManifest[key];
+    if (!key || !src) {
+      markMissingMedia(slot);
+      return;
+    }
+
+    slot.dataset.mediaHydrating = 'true';
+    decodeMediaAsset(src)
+      .then(() => {
+        slot.style.backgroundImage = `linear-gradient(180deg, rgba(4, 6, 16, .04), rgba(4, 6, 16, .58)), url("${src}")`;
+        slot.dataset.mediaHydrated = 'true';
+        delete slot.dataset.mediaHydrating;
+        requestAnimationFrame(() => {
           slot.classList.add('has-media');
           slot.closest('.floating-photo, .media-card')?.classList.add('has-media');
-        };
-        image.onerror = probe;
-        image.src = src;
-      };
-      probe();
+        });
+      })
+      .catch(() => {
+        delete slot.dataset.mediaHydrating;
+        markMissingMedia(slot);
+      });
+  }
+
+  function hydrateMediaSlots(scope = document) {
+    const slots = [...scope.querySelectorAll('[data-media-key]')];
+    if (!slots.length) return;
+
+    const observer = 'IntersectionObserver' in window
+      ? new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            applyMediaToSlot(entry.target);
+            observer.unobserve(entry.target);
+          });
+        }, { rootMargin: '180% 0px', threshold: 0.01 })
+      : null;
+
+    slots.forEach((slot, index) => {
+      const key = slot.dataset.mediaKey;
+      if (!mediaAssetManifest[key]) {
+        markMissingMedia(slot);
+        return;
+      }
+
+      // Las primeras escenas se decodifican de inmediato; el resto se prepara
+      // cerca del viewport para evitar cargas simultáneas y parpadeos.
+      if (index < 14 || !observer) applyMediaToSlot(slot);
+      else observer.observe(slot);
     });
+
+    const preloadRemaining = () => {
+      slots.slice(14).forEach(slot => applyMediaToSlot(slot));
+      observer?.disconnect();
+    };
+
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(preloadRemaining, { timeout: 2400 });
+    } else {
+      window.setTimeout(preloadRemaining, 900);
+    }
   }
 
   // ANIMATION HOOKS:
@@ -481,12 +583,7 @@
         <div class="intro-hero__content scroll-scene__content reveal-item anim-section-header anim-hero">
           <div class="eyebrow anim-eyebrow">INSTITUTO CEDRUS · BACHILLERATO</div>
           <h1 class="anim-title">${escapeHtml(data.meta.title)}<br><em>${escapeHtml(data.meta.subtitle)}</em></h1>
-          <p class="anim-copy">${escapeHtml(data.meta.period)} · Presentación ejecutiva inmersiva con navegación por scroll.</p>
-          <div class="chip-row anim-chip-group">
-            <span class="outline-chip anim-chip">${escapeHtml(data.meta.organization)}</span>
-            <span class="outline-chip anim-chip">${escapeHtml(data.meta.theme)}</span>
-            <span class="outline-chip anim-chip">Desplázate para continuar</span>
-          </div>
+          <p class="anim-copy">${escapeHtml(data.meta.period)}</p>
         </div>
       </section>
       ${data.chapters.map((chapter, chapterIndex) => {
@@ -507,7 +604,7 @@
                 const currentFlatIndex = flatIndex;
                 const variant = ['layout-left', 'layout-right', 'layout-center', 'layout-wide', 'layout-floating'][currentFlatIndex % 5];
                 const mediaPlacement = getFloatingPlacement(slide);
-                const mediaSide = getFloatingSide(variant, currentFlatIndex);
+                const mediaSide = getFloatingSide(variant, currentFlatIndex, slide);
                 const sideMedia = mediaPlacement === 'side'
                   ? createFloatingMedia(slide.floatingMedia, slide.floatingLayout || 'single-wide', 'side')
                   : '';
@@ -761,7 +858,22 @@
       const rect = scene.getBoundingClientRect();
       const travel = Math.max(1, rect.height + viewportHeight * 0.82);
       const rawProgress = clamp((viewportHeight * 0.94 - rect.top) / travel);
+      const isNearViewport = rect.bottom > -viewportHeight * 0.7 && rect.top < viewportHeight * 1.7;
 
+      // Evita recalcular transformaciones, filtros y decenas de elementos de
+      // escenas muy alejadas. Esto reduce el uso de CPU/GPU y los parpadeos.
+      if (!isNearViewport) {
+        if (record.isNearViewport === true) {
+          content.style.setProperty('--scene-opacity', '0');
+          scene.classList.remove('is-scrub-visible', 'is-scrub-focused');
+          items.forEach(item => item.style.setProperty('--item-opacity', '0'));
+        }
+        record.isNearViewport = false;
+        record.visualProgress = rawProgress;
+        return;
+      }
+
+      record.isNearViewport = true;
       if (record.visualProgress === null || force) record.visualProgress = rawProgress;
       const before = record.visualProgress;
       record.visualProgress += (rawProgress - record.visualProgress) * follow;
@@ -936,11 +1048,78 @@
     return window.scrollY + rect.top - targetRectTop;
   }
 
+  function isInstructionGateActive() {
+    return Boolean(!state.started && els.instructionGate && !els.instructionGate.hidden);
+  }
+
+  function startPresentation() {
+    if (!isInstructionGateActive()) return;
+
+    els.startPresentationButton?.setAttribute('disabled', '');
+    els.instructionGate.classList.add('is-loading');
+
+    // La presentación siempre comienza desde la portada.
+    scrollToNavigationIndex(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+    window.setTimeout(() => {
+      state.started = true;
+      document.documentElement.classList.remove('instructions-active');
+      els.instructionGate.classList.add('is-leaving');
+      updateTheme(0);
+      updateChrome();
+      broadcastState();
+    }, 1650);
+
+    window.setTimeout(() => {
+      els.instructionGate.hidden = true;
+      els.instructionGate.setAttribute('aria-hidden', 'true');
+      els.scrollRoot?.focus?.({ preventScroll: true });
+    }, 2350);
+  }
+
+  function showQuickEditToast(message) {
+    if (!els.quickEditToast) return;
+    els.quickEditToast.textContent = message;
+    els.quickEditToast.classList.add('is-visible');
+    els.quickEditToast.setAttribute('aria-hidden', 'false');
+    window.clearTimeout(showQuickEditToast.timer);
+    showQuickEditToast.timer = window.setTimeout(() => {
+      els.quickEditToast.classList.remove('is-visible');
+      els.quickEditToast.setAttribute('aria-hidden', 'true');
+    }, 2200);
+  }
+
+  function getNavigationDuration() {
+    return state.quickEditMode ? 0 : standardTransitionDurationMs;
+  }
+
+  function setQuickEditMode(force, announce = true) {
+    state.quickEditMode = typeof force === 'boolean' ? force : !state.quickEditMode;
+    document.documentElement.classList.toggle('quick-edit-mode', state.quickEditMode);
+
+    cancelProgrammaticScroll();
+    if (cinematicScroll) {
+      cinematicScroll.options.navigationDurationMs = state.quickEditMode ? 0 : standardTransitionDurationMs;
+      cinematicScroll.options.wheelGestureCooldownMs = state.quickEditMode
+        ? 70
+        : smoothScrollConfig.wheelGestureCooldownMs;
+      cinematicScroll.wheelLockUntil = 0;
+      cinematicScroll.syncToWindow();
+    }
+
+    if (announce) {
+      showQuickEditToast(state.quickEditMode
+        ? 'Modo edición rápida activado · desplazamiento inmediato'
+        : 'Animación cinematográfica restaurada');
+    }
+  }
+
   function isTransitionInProgress() {
     return Boolean(cinematicScroll?.isNavigating || fallbackNavigationFrame !== null);
   }
 
-  function scrollToNavigationIndex(index, durationMs = standardTransitionDurationMs) {
+  function scrollToNavigationIndex(index, durationMs = getNavigationDuration()) {
     const isImmediate = durationMs <= 0;
     if (!isImmediate && timingConfig.lockInputDuringTransition && isTransitionInProgress()) return false;
 
@@ -951,7 +1130,7 @@
 
     navigationCursorIndex = clampedIndex;
     if (isImmediate) setActiveScene(record);
-    animateWindowScroll(getSceneFocusScrollY(record.element), isImmediate ? 0 : standardTransitionDurationMs);
+    animateWindowScroll(getSceneFocusScrollY(record.element), isImmediate ? 0 : durationMs);
     return true;
   }
 
@@ -1031,88 +1210,130 @@
 
   function initAmbientCanvas() {
     const canvas = els.canvas;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let width = 0;
     let height = 0;
     let dpr = 1;
     let particles = [];
+    let lastFrameTime = 0;
+    let cachedAccent = '';
+    let cachedGlow = null;
+    let resizeFrame = null;
 
     function createParticles() {
-      const count = Math.max(90, Math.floor(window.innerWidth / 11));
+      const desired = reducedMotion ? 28 : Math.floor(window.innerWidth / 22);
+      const count = Math.min(96, Math.max(44, desired));
       particles = Array.from({ length: count }, () => {
         const depth = Math.random();
         return {
           x: Math.random() * width,
           y: Math.random() * height,
           z: depth,
-          size: 0.5 + depth * 2.4,
-          alpha: 0.08 + depth * 0.22,
-          speedX: (Math.random() - 0.5) * (0.12 + depth * 0.3),
-          speedY: (Math.random() - 0.5) * (0.08 + depth * 0.22),
+          size: 0.5 + depth * 2.1,
+          alpha: 0.07 + depth * 0.18,
+          speedX: reducedMotion ? 0 : (Math.random() - 0.5) * (0.1 + depth * 0.22),
+          speedY: reducedMotion ? 0 : (Math.random() - 0.5) * (0.07 + depth * 0.18),
           twinkle: Math.random() * Math.PI * 2
         };
       });
     }
 
+    function rebuildGlow(accent) {
+      cachedAccent = accent;
+      cachedGlow = ctx.createRadialGradient(
+        width * 0.5,
+        height * 0.2,
+        0,
+        width * 0.5,
+        height * 0.2,
+        Math.max(width, height) * 0.75
+      );
+      cachedGlow.addColorStop(0, `rgba(${accent}, 0.10)`);
+      cachedGlow.addColorStop(0.4, `rgba(${accent}, 0.025)`);
+      cachedGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    }
+
     function resize() {
-      dpr = Math.min(2, window.devicePixelRatio || 1);
+      dpr = Math.min(1.5, window.devicePixelRatio || 1);
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       createParticles();
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || '82,165,54';
+      rebuildGlow(accent);
     }
 
-    function frame() {
-      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || '82,165,54';
-      ctx.clearRect(0, 0, width, height);
+    function frame(now = 0) {
+      requestAnimationFrame(frame);
+      if (document.hidden || now - lastFrameTime < 28) return;
+      lastFrameTime = now;
 
-      const glow = ctx.createRadialGradient(width * 0.5, height * 0.2, 0, width * 0.5, height * 0.2, Math.max(width, height) * 0.75);
-      glow.addColorStop(0, `rgba(${accent}, 0.11)`);
-      glow.addColorStop(0.4, `rgba(${accent}, 0.03)`);
-      glow.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = glow;
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || '82,165,54';
+      if (!cachedGlow || accent !== cachedAccent) rebuildGlow(accent);
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = cachedGlow;
       ctx.fillRect(0, 0, width, height);
 
-      particles.forEach((p, index) => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-        p.twinkle += 0.015 + p.z * 0.02;
+      particles.forEach((particle, index) => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.twinkle += 0.012 + particle.z * 0.016;
 
-        if (p.x < -30) p.x = width + 30;
-        if (p.x > width + 30) p.x = -30;
-        if (p.y < -30) p.y = height + 30;
-        if (p.y > height + 30) p.y = -30;
+        if (particle.x < -30) particle.x = width + 30;
+        if (particle.x > width + 30) particle.x = -30;
+        if (particle.y < -30) particle.y = height + 30;
+        if (particle.y > height + 30) particle.y = -30;
 
-        const a = p.alpha + Math.sin(p.twinkle) * 0.04;
+        const alpha = particle.alpha + Math.sin(particle.twinkle) * 0.035;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${Math.max(0.02, a)})`;
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${Math.max(0.02, alpha)})`;
         ctx.fill();
 
-        if (index % 10 === 0) {
+        if (index % 16 === 0) {
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 6, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${accent},${0.008 + p.z * 0.02})`;
+          ctx.arc(particle.x, particle.y, particle.size * 5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${accent},${0.006 + particle.z * 0.015})`;
           ctx.fill();
         }
       });
-
-      requestAnimationFrame(frame);
     }
 
     resize();
-    frame();
-    window.addEventListener('resize', resize);
+    requestAnimationFrame(frame);
+    window.addEventListener('resize', () => {
+      if (resizeFrame !== null) cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = null;
+        resize();
+      });
+    }, { passive: true });
   }
 
   function initCursorGlow() {
+    if (window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.cursorGlow.hidden = true;
+      return;
+    }
+
+    let pointerFrame = null;
+    let pointerX = 0;
+    let pointerY = 0;
     document.addEventListener('pointermove', event => {
-      els.cursorGlow.style.transform = `translate(${event.clientX - 180}px, ${event.clientY - 180}px)`;
-    });
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (pointerFrame !== null) return;
+      pointerFrame = requestAnimationFrame(() => {
+        pointerFrame = null;
+        els.cursorGlow.style.transform = `translate3d(${pointerX - 180}px, ${pointerY - 180}px, 0)`;
+      });
+    }, { passive: true });
   }
 
   function restoreState() {
@@ -1144,12 +1365,32 @@
     if (event.pointerType === 'touch' || event.pointerType === 'pen') cancelProgrammaticScroll();
   }, { passive: true });
 
+  els.startPresentationButton?.addEventListener('click', startPresentation);
+
+  // Mientras las indicaciones estén visibles, se bloquea el desplazamiento
+  // para evitar que la presentación avance detrás de la pantalla inicial.
+  window.addEventListener('wheel', event => {
+    if (isInstructionGateActive()) event.preventDefault();
+  }, { passive: false, capture: true });
+
+  window.addEventListener('touchmove', event => {
+    if (isInstructionGateActive()) event.preventDefault();
+  }, { passive: false, capture: true });
+
   els.presenter.addEventListener('click', openPresenter);
   els.fullscreen.addEventListener('click', toggleFullscreen);
 
   window.addEventListener('keydown', event => {
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
     const key = event.key.toLowerCase();
+
+    if (isInstructionGateActive()) {
+      if (['enter', ' ', 'arrowright', 'arrowdown'].includes(key)) {
+        event.preventDefault();
+        startPresentation();
+      }
+      return;
+    }
     if (state.blackout && key !== 'b' && key !== 'escape') return;
     if (['arrowdown', 'arrowright', 'pagedown', ' '].includes(key)) { event.preventDefault(); goNext(); }
     else if (['arrowup', 'arrowleft', 'pageup'].includes(key)) { event.preventDefault(); goPrev(); }
@@ -1158,6 +1399,7 @@
     else if (key === 'p') openPresenter();
     else if (key === 'f') toggleFullscreen();
     else if (key === 'b') toggleBlackout();
+    else if (key === String(editingConfig.shortcut || 'e').toLowerCase()) setQuickEditMode();
     else if (key === 'h' || key === '?') toggleHelp();
     else if (key === 'escape') {
       if (state.blackout) toggleBlackout(false);
@@ -1176,11 +1418,14 @@
   channel?.addEventListener('message', event => handleRemote(event.data));
 
   renderStory();
+  setQuickEditMode(state.quickEditMode, false);
   updateTheme(0);
   updateChrome();
   initAmbientCanvas();
   initCursorGlow();
-  restoreState();
+  // La pantalla inicial debe dirigir siempre a la portada, sin restaurar
+  // una posición anterior guardada en el navegador.
+  scrollToNavigationIndex(0, 0);
   channel?.postMessage({ type: 'requestState', timestamp: Date.now() });
   localStorage.setItem('cedrus-command', JSON.stringify({ type: 'requestState', timestamp: Date.now() }));
 })();
