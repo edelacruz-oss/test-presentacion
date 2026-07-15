@@ -1,0 +1,8 @@
+VERSIÓN ACTUALIZADA · FOTOS AMPLIADAS
+
+Cambios principales:
+1. Se integraron más fotografías de la obra de Aladdín en una evidencia visual tipo carrusel.
+2. Se integraron más fotografías de capacitaciones y formación continua en Psicopedagogía.
+3. Se ampliaron las evidencias visuales del Proyecto Integrador / capacitaciones del área Económico-Administrativa.
+4. Se añadió un nuevo layout visual: carousel.
+5. Las fotografías del carrusel aparecen y desaparecen suavemente sin saturar el diseño.

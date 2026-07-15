@@ -39,6 +39,8 @@
     chapterIndex: 0,
     slideIndex: 0,
     viewType: 'cover',
+    mediaGroupIndex: 0,
+    mediaGroupCount: 1,
     connected: false,
     remaining: 240,
     running: false,
@@ -60,10 +62,22 @@
   function chapter() { return data.chapters[state.chapterIndex]; }
   function slide() { return chapter().slides[state.slideIndex]; }
 
-  function getFloatingPlacement(item) {
+  function getFloatingMediaGroups(item) {
+    const groups = Array.isArray(item?.floatingMediaGroups)
+      ? item.floatingMediaGroups.filter(group => Array.isArray(group?.media) && group.media.length)
+      : [];
+    if (groups.length) return groups;
+
     const media = Array.isArray(item?.floatingMedia) ? item.floatingMedia : [];
-    if (!media.length) return 'none';
+    return media.length ? [{ media, layout: item.floatingLayout }] : [];
+  }
+
+  function getFloatingPlacement(item) {
+    const groups = getFloatingMediaGroups(item);
+    if (!groups.length) return 'none';
+    if (groups.length > 1) return 'scene';
     if (['side', 'scene'].includes(item.floatingPlacement)) return item.floatingPlacement;
+    const media = groups[0].media;
     const layoutsWithRoom = new Set(['hero', 'statement', 'quote', 'finale']);
     return media.length === 1 && layoutsWithRoom.has(item.layout) ? 'side' : 'scene';
   }
@@ -79,28 +93,51 @@
   function nextPosition() {
     const ch = chapter();
     const currentItem = ch.slides[state.slideIndex];
+    const mediaGroups = getFloatingMediaGroups(currentItem);
 
     if (state.viewType === 'cover') {
-      return { viewType: 'intro', chapterIndex: 0, slideIndex: 0 };
+      return { viewType: 'intro', chapterIndex: 0, slideIndex: 0, mediaGroupIndex: 0, mediaGroupCount: 1 };
     }
 
     if (state.viewType === 'intro') {
-      return { viewType: 'slide', chapterIndex: state.chapterIndex, slideIndex: 0 };
+      return { viewType: 'slide', chapterIndex: state.chapterIndex, slideIndex: 0, mediaGroupIndex: 0, mediaGroupCount: 1 };
     }
 
     if (state.viewType === 'slide' && hasDedicatedMediaScene(currentItem)) {
-      return { viewType: 'media', chapterIndex: state.chapterIndex, slideIndex: state.slideIndex };
+      return {
+        viewType: 'media',
+        chapterIndex: state.chapterIndex,
+        slideIndex: state.slideIndex,
+        mediaGroupIndex: 0,
+        mediaGroupCount: Math.max(1, mediaGroups.length)
+      };
+    }
+
+    if (state.viewType === 'media' && state.mediaGroupIndex < Math.max(1, mediaGroups.length) - 1) {
+      return {
+        viewType: 'media',
+        chapterIndex: state.chapterIndex,
+        slideIndex: state.slideIndex,
+        mediaGroupIndex: state.mediaGroupIndex + 1,
+        mediaGroupCount: Math.max(1, mediaGroups.length)
+      };
     }
 
     if (state.slideIndex < ch.slides.length - 1) {
-      return { viewType: 'slide', chapterIndex: state.chapterIndex, slideIndex: state.slideIndex + 1 };
+      return { viewType: 'slide', chapterIndex: state.chapterIndex, slideIndex: state.slideIndex + 1, mediaGroupIndex: 0, mediaGroupCount: 1 };
     }
 
     if (state.chapterIndex < data.chapters.length - 1) {
-      return { viewType: 'intro', chapterIndex: state.chapterIndex + 1, slideIndex: 0 };
+      return { viewType: 'intro', chapterIndex: state.chapterIndex + 1, slideIndex: 0, mediaGroupIndex: 0, mediaGroupCount: 1 };
     }
 
-    return { viewType: state.viewType, chapterIndex: state.chapterIndex, slideIndex: state.slideIndex };
+    return {
+      viewType: state.viewType,
+      chapterIndex: state.chapterIndex,
+      slideIndex: state.slideIndex,
+      mediaGroupIndex: state.mediaGroupIndex,
+      mediaGroupCount: state.mediaGroupCount
+    };
   }
 
   function heading(item) { return item.title || item.quote || item.subtitle || 'Momento visual'; }
@@ -118,16 +155,20 @@
     return `<small>PORTADA</small><h2>${escapeHtml(data.meta.title)}</h2><p>${escapeHtml(data.meta.subtitle)} · ${escapeHtml(data.meta.period)}</p>`;
   }
 
-  function mediaPreviewMarkup(item, ch) {
-    const count = item.floatingMedia?.length || 0;
-    return `<small>EVIDENCIA VISUAL</small><h2>${escapeHtml(item.floatingTitle || 'Fotografías de contexto')}</h2><p>${count} ${count === 1 ? 'fotografía' : 'fotografías'} · ${escapeHtml(ch.title)}</p>`;
+  function mediaPreviewMarkup(item, ch, groupIndex = 0) {
+    const groups = getFloatingMediaGroups(item);
+    const safeIndex = Math.max(0, Math.min(groups.length - 1, Number(groupIndex) || 0));
+    const group = groups[safeIndex] || { media: [] };
+    const count = group.media?.length || 0;
+    const groupLabel = groups.length > 1 ? ` · ${safeIndex + 1}/${groups.length}` : '';
+    return `<small>EVIDENCIA VISUAL${groupLabel}</small><h2>${escapeHtml(group.title || item.floatingTitle || 'Fotografías de contexto')}</h2><p>${count} ${count === 1 ? 'fotografía' : 'fotografías'} · ${escapeHtml(ch.title)}</p>`;
   }
 
   function renderPreview(position) {
     const ch = data.chapters[position.chapterIndex];
     if (position.viewType === 'cover') return coverPreviewMarkup();
     if (position.viewType === 'intro') return introPreviewMarkup(ch);
-    if (position.viewType === 'media') return mediaPreviewMarkup(ch.slides[position.slideIndex], ch);
+    if (position.viewType === 'media') return mediaPreviewMarkup(ch.slides[position.slideIndex], ch, position.mediaGroupIndex);
     return previewMarkup(ch.slides[position.slideIndex], ch);
   }
 
@@ -144,8 +185,9 @@
       els.currentPosition.textContent = `${pad(ch.number)} · INTRO`;
       els.currentPreview.innerHTML = introPreviewMarkup(ch);
     } else if (state.viewType === 'media') {
-      els.currentPosition.textContent = `${pad(ch.number)} · FOTOS`;
-      els.currentPreview.innerHTML = mediaPreviewMarkup(item, ch);
+      const groupLabel = state.mediaGroupCount > 1 ? ` ${state.mediaGroupIndex + 1}/${state.mediaGroupCount}` : '';
+      els.currentPosition.textContent = `${pad(ch.number)} · FOTOS${groupLabel}`;
+      els.currentPreview.innerHTML = mediaPreviewMarkup(item, ch, state.mediaGroupIndex);
     } else {
       els.currentPosition.textContent = `${pad(ch.number)} · ${pad(state.slideIndex + 1)}`;
       els.currentPreview.innerHTML = previewMarkup(item, ch);
@@ -156,7 +198,7 @@
       : next.viewType === 'cover'
         ? 'PORTADA'
         : next.viewType === 'media'
-          ? `${pad(nextCh.number)} · FOTOS`
+          ? `${pad(nextCh.number)} · FOTOS${next.mediaGroupCount > 1 ? ` ${next.mediaGroupIndex + 1}/${next.mediaGroupCount}` : ''}`
           : `${pad(nextCh.number)} · ${pad(next.slideIndex + 1)}`;
     els.nextPreview.innerHTML = renderPreview(next);
     els.speaker.textContent = state.viewType === 'cover' ? data.meta.organization : ch.speaker;
@@ -219,6 +261,8 @@
     state.chapterIndex = Math.max(0, Math.min(data.chapters.length - 1, Number(message.chapterIndex) || 0));
     state.slideIndex = Math.max(0, Math.min(chapter().slides.length - 1, Number(message.slideIndex) || 0));
     state.viewType = ['cover', 'intro', 'slide', 'media'].includes(message.viewType) ? message.viewType : 'slide';
+    state.mediaGroupIndex = state.viewType === 'media' ? Math.max(0, Number(message.mediaGroupIndex) || 0) : 0;
+    state.mediaGroupCount = state.viewType === 'media' ? Math.max(1, Number(message.mediaGroupCount) || 1) : 1;
     if (chapterChanged && state.autoReset) resetChapterTimer(false);
     render();
   }

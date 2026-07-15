@@ -172,7 +172,7 @@ window.PRESENTATION_DATA = {
           ],
           "notes": [
             "Relacionar la excelencia académica de Cedrus con el enfoque de equidad de la NEM.",
-            "Vincular el liderazgo humanista con el Artículo 3º y la legislación educativa de Hidalgo.",
+            "Vincular el liderazgo humanista con el Artículo 3.º y la legislación educativa de Hidalgo.",
             "Destacar la formación ambiental y ciudadana como eje institucional."
           ]
         },
@@ -429,7 +429,7 @@ window.PRESENTATION_DATA = {
           "title": "La exigencia también puede generar entusiasmo.",
           "metrics": [
             {
-              "value": "100%",
+              "value": "100 %",
               "label": "consideró adecuada la dificultad"
             },
             {
@@ -437,7 +437,7 @@ window.PRESENTATION_DATA = {
               "label": "volvería a participar"
             },
             {
-              "value": "4.3/5",
+              "value": "4,3/5",
               "label": "valoración del trato docente"
             },
             {
@@ -568,7 +568,7 @@ window.PRESENTATION_DATA = {
           "layout": "statement",
           "eyebrow": "Compromiso ambiental",
           "title": "Recolectar, separar y convertir una acción cotidiana en cultura ambiental.",
-          "body": "Participación en CICLA / Eco‑Cicla, Tapatón y campañas de separación de residuos, con reconocimiento interinstitucional.",
+          "body": "Participación en CICLA/Eco‑Cicla, Tapatón y campañas de separación de residuos, con reconocimiento interinstitucional.",
           "notes": [
             "Mencionar la colecta y separación de residuos sólidos organizada por la Presidencia Municipal de Pachuca.",
             "Destacar la premiación Eco-Cicla como resultado visible de la participación estudiantil."
@@ -628,6 +628,37 @@ window.PRESENTATION_DATA = {
           ],
           "notes": [
             "Destacar que la academia consolidó una cultura de colaboración docente orientada a la mejora continua."
+          ],
+          "floatingPlacement": "scene",
+          "floatingLayout": "collage",
+          "floatingTitle": "Evidencias del Proyecto Integrador",
+          "floatingSubtitle": "Presentaciones, stands y defensa de propuestas que dieron vida a las capacitaciones del área.",
+          "floatingMedia": [
+            {
+              "key": "economico-proyecto-taak",
+              "label": "Taak Couture",
+              "caption": "Propuesta de marca y comunicación."
+            },
+            {
+              "key": "economico-presentacion",
+              "label": "Presentación ejecutiva",
+              "caption": "Defensa de ideas frente a sinodales."
+            },
+            {
+              "key": "economico-encuentro",
+              "label": "Encuentro interinstitucional",
+              "caption": "Aprendizaje basado en retos y exposición."
+            },
+            {
+              "key": "economico-extra-01",
+              "label": "Exposición de proyectos",
+              "caption": "Interacción con evaluadores y asistentes."
+            },
+            {
+              "key": "economico-extra-02",
+              "label": "Capacitación para el trabajo",
+              "caption": "Productos y prototipos presentados por los estudiantes."
+            }
           ]
         },
         {
@@ -986,12 +1017,55 @@ window.PRESENTATION_DATA = {
             "Presentar Aladdín como mucho más que una obra de teatro.",
             "Fue un reto de meses de planeación, organización, ensayos y trabajo colaborativo."
           ],
-          "floatingLayout": "single-cinematic",
-          "floatingMedia": [
+          "floatingLayout": "collage",
+          "floatingPlacement": "scene",
+          "floatingTitle": "Aladdín · Evidencias del escenario",
+          "floatingSubtitle": "Una selección de momentos escénicos, vestuario, interpretación y trabajo colectivo.",
+          "floatingMediaGroups": [
             {
-              "key": "aladdin-escenario",
-              "label": "Aladdín",
-              "caption": "Un proyecto artístico construido por toda la comunidad."
+              "layout": "collage",
+              "media": [
+                {
+                  "key": "aladdin-escenario",
+                  "label": "Aladdín · panorama escénico",
+                  "caption": "El montaje final como experiencia colectiva."
+                },
+                {
+                  "key": "aladdin-escena-01",
+                  "label": "Aladdín · escena principal",
+                  "caption": "Interpretación y presencia escénica."
+                },
+                {
+                  "key": "aladdin-escena-02",
+                  "label": "Genio en escena",
+                  "caption": "Energía, color y narrativa visual."
+                },
+                {
+                  "key": "aladdin-escena-03",
+                  "label": "Elenco en acción",
+                  "caption": "Coreografía y puesta en escena."
+                }
+              ]
+            },
+            {
+              "layout": "collage",
+              "media": [
+                {
+                  "key": "aladdin-escena-04",
+                  "label": "Jasmine",
+                  "caption": "Detalle de vestuario y actuación."
+                },
+                {
+                  "key": "aladdin-escena-05",
+                  "label": "Momento central",
+                  "caption": "Una escena memorable del espectáculo."
+                },
+                {
+                  "key": "aladdin-escena-06",
+                  "label": "Cierre del número",
+                  "caption": "Trabajo en conjunto y presencia teatral."
+                }
+              ]
             }
           ]
         },
@@ -1165,14 +1239,47 @@ window.PRESENTATION_DATA = {
             "Mencionar el Diplomado en Habilidades Gerenciales para un Liderazgo Transformador, junio–diciembre 2025.",
             "Mencionar el taller Escuelas que Aprenden: Marketing Educativo, febrero 2026."
           ],
-          "floatingLayout": "single-wide",
+          "floatingLayout": "collage",
           "floatingMedia": [
             {
               "key": "psicopedagogia-formacion",
               "label": "Formación continua",
               "caption": "Desarrollo docente y liderazgo transformador."
+            },
+            {
+              "key": "capacitaciones-01",
+              "label": "Capacitación institucional",
+              "caption": "Participación activa del equipo en espacios de actualización."
+            },
+            {
+              "key": "capacitaciones-02",
+              "label": "Conferencia / taller",
+              "caption": "Aprendizaje aplicado a la práctica educativa."
+            },
+            {
+              "key": "capacitaciones-03",
+              "label": "Trabajo académico",
+              "caption": "Análisis, reflexión y toma de notas."
+            },
+            {
+              "key": "capacitaciones-04",
+              "label": "Cierre de formación",
+              "caption": "Experiencia compartida y construcción de equipo."
+            },
+            {
+              "key": "capacitaciones-05",
+              "label": "Audiencia estudiantil",
+              "caption": "Seguimiento a experiencias de orientación y formación."
+            },
+            {
+              "key": "capacitaciones-06",
+              "label": "Aprendizaje con aliados",
+              "caption": "Vinculación con instituciones para fortalecer capacidades."
             }
-          ]
+          ],
+          "floatingPlacement": "scene",
+          "floatingTitle": "Capacitaciones y formación continua",
+          "floatingSubtitle": "Espacios de actualización, liderazgo y acompañamiento que fortalecieron la calidad docente e institucional."
         }
       ]
     },
@@ -1276,7 +1383,7 @@ window.PRESENTATION_DATA = {
               "label": "voluntarios activos al cierre"
             },
             {
-              "value": "66.7%",
+              "value": "66,7 %",
               "label": "permanencia de voluntarios"
             },
             {
@@ -1416,7 +1523,7 @@ window.PRESENTATION_DATA = {
           "projects": [
             {
               "title": "Arkansas State",
-              "text": "Becas y descuentos de 30% a 60% según promedio."
+              "text": "Becas y descuentos de 30 % a 60 % según promedio."
             },
             {
               "title": "Mondragón México",
@@ -1458,7 +1565,7 @@ window.PRESENTATION_DATA = {
               "label": "inscripciones concretadas"
             },
             {
-              "value": "81.8%",
+              "value": "81,8 %",
               "label": "conversión de procesos definidos"
             },
             {

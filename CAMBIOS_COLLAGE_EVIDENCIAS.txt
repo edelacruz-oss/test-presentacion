@@ -1,0 +1,7 @@
+VERSIÓN ACTUALIZADA · EVIDENCIAS TIPO COLLAGE
+
+Cambios principales:
+1. Las secciones de evidencia visual ya no muestran fotografías una sobre otra.
+2. Las escenas ampliadas ahora usan un layout tipo collage.
+3. Todas las fotografías permanecen visibles y distinguibles al mismo tiempo.
+4. Se conserva el movimiento flotante y la estética futurista del proyecto.

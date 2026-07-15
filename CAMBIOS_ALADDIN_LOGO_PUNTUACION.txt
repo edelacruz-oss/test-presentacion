@@ -1,0 +1,21 @@
+VERSIÓN ACTUALIZADA · ALADDÍN, LOGO Y REVISIÓN ORTOTIPOGRÁFICA
+
+1. Fotografías de Aladdín
+- Las siete fotografías se dividieron en dos escenas de evidencia visual.
+- Primera escena: cuatro fotografías.
+- Segunda escena: tres fotografías.
+- Ambas utilizan un collage sin superposición para que todas puedan distinguirse.
+- La navegación del teclado, scroll y pantalla del presentador reconoce las dos escenas.
+
+2. Logo institucional
+- Se integró el archivo PNG proporcionado en el header principal.
+- El logo se encuentra en assets/logo-cedrus.png.
+
+3. Puntuación y abreviaturas
+- Se normalizaron los ordinales con punto: 1.º, 2.º, 3.º, etc.
+- Se corrigió Artículo 3.º.
+- Se normalizó el espacio del símbolo de porcentaje: 100 %, 66,7 %, 81,8 %, 30 %–60 %.
+- Se aplicó coma decimal en 4,3/5.
+- Se conservó Lic. con punto abreviativo.
+- Las siglas NEM, SEPH, UAEH, EBC y PAEC permanecen sin puntos, de acuerdo con la escritura actual de siglas en español.
+- No se modificó el contenido ni la información de la presentación.

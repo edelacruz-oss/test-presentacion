@@ -80,6 +80,8 @@
     chapterIndex: 0,
     slideIndex: 0,
     viewType: 'cover',
+    mediaGroupIndex: 0,
+    mediaGroupCount: 1,
     timerRemaining: data.chapters[0].duration * 60,
     timerRunning: false,
     blackout: false,
@@ -138,11 +140,23 @@
   // Decide cómo se presentan las fotografías adicionales sin saturar la escena.
   // - side: una fotografía acompaña al contenido en una columna lateral.
   // - scene: se crea un momento visual independiente para dar espacio completo.
-  function getFloatingPlacement(slide) {
+  function getFloatingMediaGroups(slide) {
+    const groups = Array.isArray(slide?.floatingMediaGroups)
+      ? slide.floatingMediaGroups.filter(group => Array.isArray(group?.media) && group.media.length)
+      : [];
+    if (groups.length) return groups;
+
     const media = Array.isArray(slide?.floatingMedia) ? slide.floatingMedia : [];
-    if (!media.length) return 'none';
+    return media.length ? [{ media, layout: slide.floatingLayout }] : [];
+  }
+
+  function getFloatingPlacement(slide) {
+    const groups = getFloatingMediaGroups(slide);
+    if (!groups.length) return 'none';
+    if (groups.length > 1) return 'scene';
     if (['side', 'scene'].includes(slide.floatingPlacement)) return slide.floatingPlacement;
 
+    const media = groups[0].media;
     const layoutsWithRoom = new Set(['hero', 'statement', 'quote', 'finale']);
     return media.length === 1 && layoutsWithRoom.has(slide.layout) ? 'side' : 'scene';
   }
@@ -265,9 +279,9 @@
         ? 'floating-media-showcase'
         : 'floating-media-inline';
 
-    return `<div class="floating-media-stage ${layoutClass} ${modeClass} anim-grid" data-floating-layout="${escapeHtml(layout)}" data-floating-mode="${escapeHtml(mode)}">
+    return `<div class="floating-media-stage ${layoutClass} floating-count-${media.length} ${modeClass} anim-grid" data-floating-layout="${escapeHtml(layout)}" data-floating-mode="${escapeHtml(mode)}">
       ${media.map((item, index) => `
-        <figure class="floating-photo floating-photo-${index + 1} reveal-item anim-item anim-media">
+        <figure class="floating-photo floating-photo-${index + 1} reveal-item anim-item anim-media" style="--photo-index:${index + 1};--photo-count:${media.length};">
           <div class="floating-photo__surface" data-media-key="${escapeHtml(item.key || '')}" style="--float-delay:${index * -1.85}s;--float-rotate:${index % 2 ? '1.2deg' : '-1.1deg'};--float-distance:${9 + index * 2}px">
             <div class="floating-photo__glow" aria-hidden="true"></div>
             <figcaption class="floating-photo__caption">
@@ -282,28 +296,37 @@
   function createPhotoShowcase(slide, chapter, chapterIndex, slideIndex) {
     if (!hasDedicatedMediaScene(slide)) return '';
 
-    const media = slide.floatingMedia || [];
-    const layout = slide.floatingLayout || (media.length >= 3 ? 'trio' : media.length === 2 ? 'duo-overlap' : 'single-wide');
+    const groups = getFloatingMediaGroups(slide);
+    const groupCount = groups.length;
     const title = slide.floatingTitle || 'Evidencias que dan contexto';
     const subtitle = slide.floatingSubtitle || `Momentos destacados de ${chapter.title}`;
 
-    return `
-      <article class="photo-showcase-scene scroll-scene anim-block scene-${chapter.id}-${pad(slideIndex + 1)}-fotos scroll-motion-center-out"
-        data-chapter-index="${chapterIndex}"
-        data-slide-index="${slideIndex}"
-        data-view-type="media"
-        data-animation-scene="${chapter.id}-${pad(slideIndex + 1)}-fotos"
-        data-scroll-scene="${chapter.id}-${pad(slideIndex + 1)}-fotos"
-        data-scroll-style="center-out">
-        <div class="photo-showcase__content scroll-scene__content anim-content">
-          <header class="photo-showcase__header reveal-item anim-content-head">
-            <div class="eyebrow anim-eyebrow">${pad(chapter.number)}.${pad(slideIndex + 1)} · EVIDENCIA VISUAL</div>
-            <h3 class="section-title anim-title">${escapeHtml(title)}</h3>
-            <p class="body-copy anim-copy">${escapeHtml(subtitle)}</p>
-          </header>
-          ${createFloatingMedia(media, layout, 'showcase')}
-        </div>
-      </article>`;
+    return groups.map((group, groupIndex) => {
+      const media = group.media || [];
+      const layout = group.layout || slide.floatingLayout || (media.length >= 3 ? 'collage' : media.length === 2 ? 'duo-overlap' : 'single-wide');
+      const sceneSuffix = groupCount > 1 ? `-${pad(groupIndex + 1)}` : '';
+      const counter = groupCount > 1 ? ` · ${groupIndex + 1}/${groupCount}` : '';
+
+      return `
+        <article class="photo-showcase-scene scroll-scene anim-block scene-${chapter.id}-${pad(slideIndex + 1)}-fotos${sceneSuffix} scroll-motion-center-out"
+          data-chapter-index="${chapterIndex}"
+          data-slide-index="${slideIndex}"
+          data-view-type="media"
+          data-media-group-index="${groupIndex}"
+          data-media-group-count="${groupCount}"
+          data-animation-scene="${chapter.id}-${pad(slideIndex + 1)}-fotos${sceneSuffix}"
+          data-scroll-scene="${chapter.id}-${pad(slideIndex + 1)}-fotos${sceneSuffix}"
+          data-scroll-style="center-out">
+          <div class="photo-showcase__content scroll-scene__content anim-content">
+            <header class="photo-showcase__header reveal-item anim-content-head">
+              <div class="eyebrow anim-eyebrow">${pad(chapter.number)}.${pad(slideIndex + 1)} · EVIDENCIA VISUAL${counter}</div>
+              <h3 class="section-title anim-title">${escapeHtml(group.title || title)}</h3>
+              <p class="body-copy anim-copy">${escapeHtml(group.subtitle || subtitle)}</p>
+            </header>
+            ${createFloatingMedia(media, layout, 'showcase')}
+          </div>
+        </article>`;
+    }).join('');
   }
 
   function renderBlockContent(slide, chapter, flatIndex) {
@@ -529,7 +552,9 @@
       const viewType = element.dataset.viewType || 'slide';
       const chapterIndex = viewType === 'cover' ? 0 : Number(element.dataset.chapterIndex);
       const slideIndex = ['slide', 'media'].includes(viewType) ? Number(element.dataset.slideIndex) : 0;
-      const record = { element, navIndex, viewType, chapterIndex, slideIndex };
+      const mediaGroupIndex = viewType === 'media' ? Number(element.dataset.mediaGroupIndex) || 0 : 0;
+      const mediaGroupCount = viewType === 'media' ? Math.max(1, Number(element.dataset.mediaGroupCount) || 1) : 1;
+      const record = { element, navIndex, viewType, chapterIndex, slideIndex, mediaGroupIndex, mediaGroupCount };
 
       element.dataset.navIndex = String(navIndex);
       navigationScenes.push(record);
@@ -555,7 +580,9 @@
       if (state.viewType === 'intro') {
         els.slideCounter.textContent = 'INTRO';
       } else if (state.viewType === 'media') {
-        els.slideCounter.textContent = `FOTOS · ${pad(state.slideIndex + 1)}`;
+        els.slideCounter.textContent = state.mediaGroupCount > 1
+          ? `FOTOS · ${state.mediaGroupIndex + 1}/${state.mediaGroupCount}`
+          : `FOTOS · ${pad(state.slideIndex + 1)}`;
       } else {
         els.slideCounter.textContent = `${pad(state.slideIndex + 1)} / ${pad(chapter.slides.length)}`;
       }
@@ -568,6 +595,8 @@
       chapterIndex: state.chapterIndex,
       slideIndex: state.slideIndex,
       viewType: state.viewType,
+      mediaGroupIndex: state.mediaGroupIndex,
+      mediaGroupCount: state.mediaGroupCount,
       navigationIndex: activeNavigationIndex,
       navigationCursorIndex
     }));
@@ -579,6 +608,8 @@
       chapterIndex: state.chapterIndex,
       slideIndex: state.slideIndex,
       viewType: state.viewType,
+      mediaGroupIndex: state.mediaGroupIndex,
+      mediaGroupCount: state.mediaGroupCount,
       navigationIndex: activeNavigationIndex,
       started: state.started,
       blackout: state.blackout,
@@ -596,7 +627,7 @@
 
   function setActiveScene(record) {
     if (!record?.element) return;
-    const { element, navIndex, viewType, chapterIndex, slideIndex } = record;
+    const { element, navIndex, viewType, chapterIndex, slideIndex, mediaGroupIndex = 0, mediaGroupCount = 1 } = record;
     const alreadyCurrent = element.classList.contains('is-current');
     const sameView = activeNavigationIndex === navIndex && state.viewType === viewType;
     if (alreadyCurrent && sameView) return;
@@ -607,6 +638,8 @@
     element.classList.add('is-current');
 
     state.viewType = viewType;
+    state.mediaGroupIndex = viewType === 'media' ? mediaGroupIndex : 0;
+    state.mediaGroupCount = viewType === 'media' ? mediaGroupCount : 1;
     if (viewType !== 'cover') {
       state.chapterIndex = Math.max(0, Math.min(data.chapters.length - 1, chapterIndex));
       state.slideIndex = ['slide', 'media'].includes(viewType)
