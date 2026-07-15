@@ -1,0 +1,10 @@
+CAMBIOS · FOTOGRAFÍAS REUBICADAS
+
+1. Las fotografías ya no se apilan debajo del contenido cuando no existe suficiente alto visible.
+2. Las escenas con una sola imagen y texto breve utilizan una composición lateral.
+3. Las escenas con varias imágenes o contenido denso crean un momento fotográfico independiente.
+4. Las galerías de dos y tres imágenes ya no se superponen dentro de la escena exclusiva.
+5. Las imágenes utilizan ajuste "contain" para mostrar la fotografía completa y reducir recortes.
+6. Se conserva la animación flotante, la profundidad y la sincronización con el scroll.
+7. La pantalla del presentador reconoce los momentos adicionales con la etiqueta FOTOS.
+8. La navegación por teclado, scroll y controles del presentador incluye las nuevas escenas visuales.

@@ -1,0 +1,10 @@
+ACTUALIZACIÓN · FOTOGRAFÍAS FLOTANTES
+
+- Se revisaron las evidencias visuales del informe institucional.
+- Se incorporó una selección curada de fotografías en las secciones más relevantes.
+- No se agregaron fotografías a todas las escenas para evitar saturación visual.
+- Las imágenes cuentan con movimiento flotante suave y profundidad.
+- La aparición y desaparición permanece sincronizada con el scroll cinematográfico.
+- Se añadieron composiciones de una, dos y tres fotografías.
+- Las imágenes pueden reemplazarse desde la carpeta assets conservando los nombres.
+- Se agregó GUIA_FOTOS_FLOTANTES.md con todos los nombres y ubicaciones.

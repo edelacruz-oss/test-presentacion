@@ -69,10 +69,7 @@
     chapterCounter: document.getElementById('chapterCounter'),
     chapterTitle: document.getElementById('chapterTitle'),
     speaker: document.getElementById('speakerName'),
-    slideLabel: document.getElementById('slideLabel'),
     slideCounter: document.getElementById('slideCounter'),
-    timer: document.getElementById('timerDisplay'),
-    timerChip: document.getElementById('timerChip'),
     blackout: document.getElementById('blackout'),
     help: document.getElementById('shortcutHelp'),
     canvas: document.getElementById('ambientCanvas'),
@@ -117,7 +114,6 @@
   let resizeFrame = null;
 
   const pad = value => String(value).padStart(2, '0');
-  const formatTime = seconds => `${pad(Math.floor(Math.max(0, seconds) / 60))}:${pad(Math.max(0, seconds) % 60)}`;
   const escapeHtml = (value = '') => String(value)
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
@@ -137,6 +133,28 @@
 
   function getSlideBody(slide) {
     return slide.body || slide.subtitle || slide.caption || slide.attribution || '';
+  }
+
+  // Decide cómo se presentan las fotografías adicionales sin saturar la escena.
+  // - side: una fotografía acompaña al contenido en una columna lateral.
+  // - scene: se crea un momento visual independiente para dar espacio completo.
+  function getFloatingPlacement(slide) {
+    const media = Array.isArray(slide?.floatingMedia) ? slide.floatingMedia : [];
+    if (!media.length) return 'none';
+    if (['side', 'scene'].includes(slide.floatingPlacement)) return slide.floatingPlacement;
+
+    const layoutsWithRoom = new Set(['hero', 'statement', 'quote', 'finale']);
+    return media.length === 1 && layoutsWithRoom.has(slide.layout) ? 'side' : 'scene';
+  }
+
+  function getFloatingSide(layoutVariant, flatIndex) {
+    if (layoutVariant === 'layout-left') return 'right';
+    if (layoutVariant === 'layout-right') return 'left';
+    return flatIndex % 2 === 0 ? 'right' : 'left';
+  }
+
+  function hasDedicatedMediaScene(slide) {
+    return getFloatingPlacement(slide) === 'scene';
   }
 
   function currentChapter() {
@@ -226,13 +244,66 @@
   }
 
   function createGallery(media = [], caption = '') {
-    return `<div class="gallery-grid anim-grid anim-gallery-grid">${media.map(item => `
-      <article class="media-card reveal-item anim-item anim-media" data-media-key="${escapeHtml(item.key || '')}">
-        <div class="media-overlay anim-media-overlay">
-          <span>${escapeHtml(item.label || 'Espacio visual')}</span>
-          <small>Coloca tu imagen después</small>
+    return `<div class="gallery-grid floating-gallery anim-grid anim-gallery-grid">${media.map((item, index) => `
+      <article class="media-card reveal-item anim-item anim-media">
+        <div class="media-card__surface floating-photo__surface" data-media-key="${escapeHtml(item.key || '')}" style="--float-delay:${index * -1.7}s;--float-rotate:${index % 2 ? '1.1deg' : '-1.1deg'}">
+          <div class="media-overlay anim-media-overlay">
+            <span>${escapeHtml(item.label || 'Evidencia visual')}</span>
+            <small>${escapeHtml(item.caption || 'Fotografía del informe anual')}</small>
+          </div>
         </div>
       </article>`).join('')}</div>${caption ? `<div class="section-footnote reveal-item anim-item anim-footnote">${escapeHtml(caption)}</div>` : ''}`;
+  }
+
+  function createFloatingMedia(media = [], layout = 'single-wide', mode = 'inline') {
+    if (!Array.isArray(media) || !media.length) return '';
+
+    const layoutClass = `floating-layout-${escapeHtml(layout)}`;
+    const modeClass = mode === 'side'
+      ? 'floating-media-side'
+      : mode === 'showcase'
+        ? 'floating-media-showcase'
+        : 'floating-media-inline';
+
+    return `<div class="floating-media-stage ${layoutClass} ${modeClass} anim-grid" data-floating-layout="${escapeHtml(layout)}" data-floating-mode="${escapeHtml(mode)}">
+      ${media.map((item, index) => `
+        <figure class="floating-photo floating-photo-${index + 1} reveal-item anim-item anim-media">
+          <div class="floating-photo__surface" data-media-key="${escapeHtml(item.key || '')}" style="--float-delay:${index * -1.85}s;--float-rotate:${index % 2 ? '1.2deg' : '-1.1deg'};--float-distance:${9 + index * 2}px">
+            <div class="floating-photo__glow" aria-hidden="true"></div>
+            <figcaption class="floating-photo__caption">
+              <strong>${escapeHtml(item.label || 'Evidencia visual')}</strong>
+              ${item.caption ? `<span>${escapeHtml(item.caption)}</span>` : ''}
+            </figcaption>
+          </div>
+        </figure>`).join('')}
+    </div>`;
+  }
+
+  function createPhotoShowcase(slide, chapter, chapterIndex, slideIndex) {
+    if (!hasDedicatedMediaScene(slide)) return '';
+
+    const media = slide.floatingMedia || [];
+    const layout = slide.floatingLayout || (media.length >= 3 ? 'trio' : media.length === 2 ? 'duo-overlap' : 'single-wide');
+    const title = slide.floatingTitle || 'Evidencias que dan contexto';
+    const subtitle = slide.floatingSubtitle || `Momentos destacados de ${chapter.title}`;
+
+    return `
+      <article class="photo-showcase-scene scroll-scene anim-block scene-${chapter.id}-${pad(slideIndex + 1)}-fotos scroll-motion-center-out"
+        data-chapter-index="${chapterIndex}"
+        data-slide-index="${slideIndex}"
+        data-view-type="media"
+        data-animation-scene="${chapter.id}-${pad(slideIndex + 1)}-fotos"
+        data-scroll-scene="${chapter.id}-${pad(slideIndex + 1)}-fotos"
+        data-scroll-style="center-out">
+        <div class="photo-showcase__content scroll-scene__content anim-content">
+          <header class="photo-showcase__header reveal-item anim-content-head">
+            <div class="eyebrow anim-eyebrow">${pad(chapter.number)}.${pad(slideIndex + 1)} · EVIDENCIA VISUAL</div>
+            <h3 class="section-title anim-title">${escapeHtml(title)}</h3>
+            <p class="body-copy anim-copy">${escapeHtml(subtitle)}</p>
+          </header>
+          ${createFloatingMedia(media, layout, 'showcase')}
+        </div>
+      </article>`;
   }
 
   function renderBlockContent(slide, chapter, flatIndex) {
@@ -352,17 +423,21 @@
 
   function hydrateMediaSlots(scope = document) {
     const extensions = ['webp', 'png', 'jpg', 'jpeg'];
-    scope.querySelectorAll('.media-card[data-media-key]').forEach(slot => {
+    scope.querySelectorAll('[data-media-key]').forEach(slot => {
       const key = slot.dataset.mediaKey;
       if (!key) return;
       let index = 0;
       const probe = () => {
-        if (index >= extensions.length) return;
+        if (index >= extensions.length) {
+          slot.closest('.floating-photo, .media-card')?.classList.add('is-media-missing');
+          return;
+        }
         const src = `assets/${key}.${extensions[index++]}`;
         const image = new Image();
         image.onload = () => {
-          slot.style.backgroundImage = `linear-gradient(180deg, rgba(4, 6, 16, .08), rgba(4, 6, 16, .72)), url("${src}")`;
+          slot.style.backgroundImage = `linear-gradient(180deg, rgba(4, 6, 16, .04), rgba(4, 6, 16, .58)), url("${src}")`;
           slot.classList.add('has-media');
+          slot.closest('.floating-photo, .media-card')?.classList.add('has-media');
         };
         image.onerror = probe;
         image.src = src;
@@ -399,24 +474,39 @@
                 <div class="chapter-intro__meta anim-section-meta">
                   <span class="chapter-kicker anim-eyebrow">${pad(chapter.number)} · ${escapeHtml(chapter.eyebrow || chapter.title)}</span>
                   <h2 class="anim-title">${escapeHtml(chapter.title)}</h2>
-                  <p class="anim-copy">${escapeHtml(chapter.speaker)} · ${chapter.duration} min estimados · ${chapter.slides.length} bloques</p>
+                  <p class="anim-copy">${escapeHtml(chapter.speaker)} · ${chapter.slides.length} bloques</p>
                 </div>
                 <div class="chapter-intro__accent anim-orb"></div>
               </div>
             </div>
             <div class="chapter-flow anim-flow">
               ${chapter.slides.map((slide, slideIndex) => {
-                const variant = ['layout-left', 'layout-right', 'layout-center', 'layout-wide', 'layout-floating'][flatIndex % 5];
+                const currentFlatIndex = flatIndex;
+                const variant = ['layout-left', 'layout-right', 'layout-center', 'layout-wide', 'layout-floating'][currentFlatIndex % 5];
+                const mediaPlacement = getFloatingPlacement(slide);
+                const mediaSide = getFloatingSide(variant, currentFlatIndex);
+                const sideMedia = mediaPlacement === 'side'
+                  ? createFloatingMedia(slide.floatingMedia, slide.floatingLayout || 'single-wide', 'side')
+                  : '';
+                const dedicatedMediaScene = createPhotoShowcase(slide, chapter, chapterIndex, slideIndex);
+                const shellClasses = mediaPlacement === 'side'
+                  ? `has-side-media media-side-${mediaSide}`
+                  : 'has-no-side-media';
+
                 const html = `
-                  <article class="story-block scroll-scene anim-block scene-${chapter.id}-${pad(slideIndex + 1)} scene-layout-${slide.layout || 'generic'} ${variant} ${slide.layout || 'layout-generic'}" data-flat-index="${flatIndex}" data-chapter-index="${chapterIndex}" data-slide-index="${slideIndex}" data-view-type="slide" data-animation-scene="${chapter.id}-${pad(slideIndex + 1)}" data-scroll-scene="${chapter.id}-${pad(slideIndex + 1)}">
-                    <div class="block-shell scroll-scene__content anim-content">
-                      <div class="block-meta reveal-item anim-meta">
-                        <span>${pad(chapter.number)}.${pad(slideIndex + 1)}</span>
-                        <small>${escapeHtml(slide.eyebrow || chapter.title)}</small>
+                  <article class="story-block scroll-scene anim-block scene-${chapter.id}-${pad(slideIndex + 1)} scene-layout-${slide.layout || 'generic'} ${variant} ${slide.layout || 'layout-generic'} ${mediaPlacement === 'side' ? 'scene-has-side-media' : ''}" data-flat-index="${currentFlatIndex}" data-chapter-index="${chapterIndex}" data-slide-index="${slideIndex}" data-view-type="slide" data-animation-scene="${chapter.id}-${pad(slideIndex + 1)}" data-scroll-scene="${chapter.id}-${pad(slideIndex + 1)}">
+                    <div class="block-shell scroll-scene__content anim-content ${shellClasses}">
+                      <div class="block-main">
+                        <div class="block-meta reveal-item anim-meta">
+                          <span>${pad(chapter.number)}.${pad(slideIndex + 1)}</span>
+                          <small>${escapeHtml(slide.eyebrow || chapter.title)}</small>
+                        </div>
+                        ${renderBlockContent(slide, chapter, currentFlatIndex)}
                       </div>
-                      ${renderBlockContent(slide, chapter, flatIndex)}
+                      ${sideMedia}
                     </div>
-                  </article>`;
+                  </article>
+                  ${dedicatedMediaScene}`;
                 flatIndex += 1;
                 return html;
               }).join('')}
@@ -438,7 +528,7 @@
     els.scrollRoot.querySelectorAll('.scroll-scene').forEach((element, navIndex) => {
       const viewType = element.dataset.viewType || 'slide';
       const chapterIndex = viewType === 'cover' ? 0 : Number(element.dataset.chapterIndex);
-      const slideIndex = viewType === 'slide' ? Number(element.dataset.slideIndex) : 0;
+      const slideIndex = ['slide', 'media'].includes(viewType) ? Number(element.dataset.slideIndex) : 0;
       const record = { element, navIndex, viewType, chapterIndex, slideIndex };
 
       element.dataset.navIndex = String(navIndex);
@@ -456,7 +546,6 @@
       els.chapterTitle.textContent = data.meta.title;
       els.speaker.textContent = data.meta.organization;
       els.slideCounter.textContent = 'PORTADA';
-      els.slideLabel.textContent = data.meta.period;
     } else {
       const chapter = currentChapter();
       els.chapterCounter.textContent = `${pad(chapter.number)} / ${pad(data.chapters.length)}`;
@@ -465,16 +554,13 @@
 
       if (state.viewType === 'intro') {
         els.slideCounter.textContent = 'INTRO';
-        els.slideLabel.textContent = (chapter.eyebrow || 'Introducción de la sección').slice(0, 42);
+      } else if (state.viewType === 'media') {
+        els.slideCounter.textContent = `FOTOS · ${pad(state.slideIndex + 1)}`;
       } else {
-        const slide = currentSlide();
         els.slideCounter.textContent = `${pad(state.slideIndex + 1)} / ${pad(chapter.slides.length)}`;
-        els.slideLabel.textContent = getSlideTitle(slide).replace(/\n/g, ' ').slice(0, 42);
       }
     }
 
-    els.timer.textContent = formatTime(state.timerRemaining);
-    els.timerChip.classList.toggle('is-running', Boolean(state.timerRunning));
   }
 
   function persistState() {
@@ -523,7 +609,7 @@
     state.viewType = viewType;
     if (viewType !== 'cover') {
       state.chapterIndex = Math.max(0, Math.min(data.chapters.length - 1, chapterIndex));
-      state.slideIndex = viewType === 'slide'
+      state.slideIndex = ['slide', 'media'].includes(viewType)
         ? Math.max(0, Math.min(currentChapter().slides.length - 1, slideIndex))
         : 0;
     } else {

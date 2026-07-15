@@ -1,18 +1,22 @@
 IMÁGENES REEMPLAZABLES
 =====================
 
-Puedes agregar imágenes sin editar el código. Colócalas en esta carpeta con uno de estos nombres:
+Esta carpeta contiene las fotografías seleccionadas del informe anual.
 
-- idiomas-londres-01.webp
-- idiomas-londres-02.webp
-- idiomas-intercambio-01.webp
+Para cambiar una fotografía:
+1. Sustituye el archivo existente.
+2. Conserva exactamente el mismo nombre.
+3. Recarga la presentación.
 
-También se aceptan las extensiones .png, .jpg o .jpeg.
+Se aceptan las extensiones .webp, .png, .jpg y .jpeg.
+
+Consulta el archivo GUIA_FOTOS_FLOTANTES.md ubicado en la carpeta principal del proyecto para ver:
+- la sección en la que aparece cada fotografía;
+- el nombre exacto del archivo;
+- los diseños disponibles para crear nuevas composiciones.
 
 Recomendación:
-- Formato horizontal 16:9 o 3:2.
-- Resolución mínima de 1600 px de ancho.
+- Horizontal: 1600 × 900 px o superior.
+- Vertical: 1200 × 1600 px o superior.
+- Usa WebP o JPG optimizado para mejorar el rendimiento.
 - Evita colocar texto importante cerca de los bordes.
-- Para mayor velocidad, utiliza WebP.
-
-La presentación detectará automáticamente los archivos cuando vuelva a cargarse.

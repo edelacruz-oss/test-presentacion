@@ -1,0 +1,6 @@
+AJUSTES DE INTERFAZ
+
+1. Se eliminó el temporizador de la pantalla principal.
+2. El temporizador permanece disponible en la pantalla privada del presentador.
+3. Se eliminó la duración estimada en minutos de todas las introducciones de sección.
+4. Se mantiene visible el nombre del presentador y el número de bloques.

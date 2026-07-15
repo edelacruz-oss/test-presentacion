@@ -1182,3 +1182,592 @@ html.cinematic-scroll-active body {
     scroll-behavior: auto !important;
   }
 }
+
+/* =========================================================
+   GALERÍAS Y FOTOGRAFÍAS FLOTANTES
+   Las imágenes se cargan desde assets/<data-media-key>.*.
+   Para sustituir una fotografía, conserva el nombre del archivo.
+   El movimiento flotante vive en el elemento interior para no
+   interferir con el motor de scroll cinematográfico.
+   ========================================================= */
+
+.floating-media-stage {
+  position: relative;
+  display: grid;
+  gap: clamp(12px, 1.6vw, 22px);
+  width: min(100%, 980px);
+  min-height: clamp(210px, 28vw, 330px);
+  margin-top: clamp(12px, 2vh, 26px);
+  isolation: isolate;
+}
+
+.floating-photo,
+.media-card {
+  margin: 0;
+  min-width: 0;
+}
+
+.floating-photo__surface,
+.media-card__surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 210px;
+  overflow: hidden;
+  border-radius: clamp(20px, 2.2vw, 30px);
+  border: 1px solid rgba(255, 255, 255, .12);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.015)),
+    radial-gradient(circle at 70% 15%, rgba(var(--accent-rgb), .18), transparent 46%),
+    rgba(8, 12, 28, .76);
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    0 28px 75px rgba(0,0,0,.38),
+    0 0 0 1px rgba(var(--accent-rgb), .05),
+    0 20px 80px rgba(var(--accent-rgb), .07);
+  transform: translate3d(0, 0, 0) rotate(var(--float-rotate, 0deg));
+  animation: cedrus-photo-float 7.5s ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.floating-photo__surface::before,
+.media-card__surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, rgba(255,255,255,.12), transparent 22%, transparent 70%, rgba(var(--accent-rgb), .08)),
+    linear-gradient(180deg, transparent 45%, rgba(2,4,12,.58));
+  mix-blend-mode: screen;
+  opacity: .48;
+}
+
+.floating-photo__glow {
+  position: absolute;
+  inset: 14% 10%;
+  z-index: -1;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), .22);
+  filter: blur(55px);
+  opacity: .45;
+  transform: translateZ(-1px);
+}
+
+.floating-photo__caption,
+.media-overlay {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2;
+  display: grid;
+  gap: 4px;
+  padding: 13px 15px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(4, 7, 18, .58);
+  backdrop-filter: blur(14px) saturate(135%);
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+  text-align: left;
+}
+
+.floating-photo__caption strong,
+.media-overlay span {
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 650;
+}
+
+.floating-photo__caption span,
+.media-overlay small {
+  color: rgba(235, 240, 255, .7);
+  font-size: .76rem;
+  line-height: 1.35;
+}
+
+.floating-layout-single-wide {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 900px;
+}
+.floating-layout-single-wide .floating-photo {
+  width: min(100%, 820px);
+  justify-self: center;
+}
+.floating-layout-single-wide .floating-photo__surface {
+  min-height: clamp(230px, 30vw, 360px);
+}
+
+.floating-layout-single-offset {
+  grid-template-columns: minmax(0, .76fr) minmax(160px, .24fr);
+  align-items: center;
+}
+.floating-layout-single-offset .floating-photo {
+  grid-column: 1 / 2;
+  width: min(100%, 650px);
+  justify-self: start;
+}
+.floating-layout-single-offset::after {
+  content: "";
+  grid-column: 2;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), .14), transparent 68%);
+  filter: blur(10px);
+}
+
+.floating-layout-single-cinematic {
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+}
+.floating-layout-single-cinematic .floating-photo__surface {
+  min-height: clamp(270px, 36vw, 430px);
+  background-position: center 28%;
+}
+
+.floating-layout-duo-overlap {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: center;
+  min-height: clamp(240px, 31vw, 370px);
+}
+.floating-layout-duo-overlap .floating-photo-1 {
+  grid-column: 1 / span 7;
+  grid-row: 1;
+  z-index: 1;
+  transform: translateY(8%);
+}
+.floating-layout-duo-overlap .floating-photo-2 {
+  grid-column: 6 / span 7;
+  grid-row: 1;
+  z-index: 2;
+  transform: translateY(-8%);
+}
+.floating-layout-duo-overlap .floating-photo__surface {
+  min-height: clamp(220px, 26vw, 330px);
+}
+
+.floating-layout-trio {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  min-height: clamp(230px, 27vw, 340px);
+}
+.floating-layout-trio .floating-photo:nth-child(2) {
+  transform: translateY(-8%);
+}
+.floating-layout-trio .floating-photo__surface {
+  min-height: clamp(210px, 23vw, 300px);
+}
+
+.floating-gallery .media-card {
+  position: relative;
+  min-height: 250px;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.floating-gallery .media-card__surface {
+  min-height: 250px;
+}
+.floating-gallery .media-card:nth-child(2) .media-card__surface {
+  animation-duration: 8.4s;
+}
+.floating-gallery .media-card:nth-child(3) .media-card__surface {
+  animation-duration: 7.1s;
+}
+
+.floating-photo.is-media-missing .floating-photo__surface::after,
+.media-card.is-media-missing .media-card__surface::after {
+  content: "Agrega la imagen en la carpeta assets";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: rgba(255,255,255,.55);
+  text-align: center;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-size: .7rem;
+}
+
+@keyframes cedrus-photo-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(var(--float-rotate, 0deg)) scale(1);
+  }
+  50% {
+    transform: translate3d(0, calc(var(--float-distance, 11px) * -1), 0) rotate(var(--float-rotate, 0deg)) scale(1.012);
+  }
+}
+
+/* Profundidad adicional ligada al progreso del scroll. */
+.scroll-scrub-enabled .scroll-scene .floating-media-stage {
+  perspective: 1200px;
+}
+.scroll-scrub-enabled .scroll-scene .floating-photo:nth-child(odd) {
+  --item-y: 24px;
+}
+.scroll-scrub-enabled .scroll-scene .floating-photo:nth-child(even) {
+  --item-y: -18px;
+}
+.scroll-scrub-enabled .scroll-scene.is-scrub-focused .floating-photo__surface,
+.scroll-scrub-enabled .scroll-scene.is-scrub-focused .media-card__surface {
+  box-shadow:
+    0 34px 95px rgba(0,0,0,.46),
+    0 0 0 1px rgba(var(--accent-rgb), .13),
+    0 22px 95px rgba(var(--accent-rgb), .11);
+}
+
+@media (max-width: 980px) {
+  .floating-layout-trio {
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    overflow: hidden;
+  }
+  .floating-media-stage {
+    min-height: 230px;
+  }
+  .floating-photo__caption span,
+  .media-overlay small {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .floating-media-stage,
+  .floating-layout-single-offset,
+  .floating-layout-duo-overlap,
+  .floating-layout-trio {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .floating-layout-single-offset::after {
+    display: none;
+  }
+  .floating-layout-single-offset .floating-photo,
+  .floating-layout-duo-overlap .floating-photo-1,
+  .floating-layout-duo-overlap .floating-photo-2,
+  .floating-layout-trio .floating-photo {
+    grid-column: 1;
+    grid-row: auto;
+    width: 100%;
+    transform: none;
+  }
+  .floating-layout-duo-overlap .floating-photo-2,
+  .floating-layout-trio .floating-photo:nth-child(2),
+  .floating-layout-trio .floating-photo:nth-child(3) {
+    display: none;
+  }
+  .floating-photo__surface,
+  .media-card__surface,
+  .floating-layout-single-wide .floating-photo__surface,
+  .floating-layout-single-cinematic .floating-photo__surface {
+    min-height: 220px;
+  }
+  .floating-gallery {
+    grid-template-columns: 1fr;
+  }
+  .floating-gallery .media-card:not(:first-child) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-photo__surface,
+  .media-card__surface {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   REUBICACIÓN DE FOTOGRAFÍAS · VERSIÓN 2
+   Una imagen acompaña al contenido en una columna lateral.
+   Dos o más imágenes reciben un momento visual independiente.
+   ========================================================= */
+
+.block-main {
+  min-width: 0;
+  display: grid;
+  gap: 18px;
+  align-content: center;
+}
+
+.block-shell.has-side-media {
+  width: 100%;
+  max-width: 1120px !important;
+  margin-inline: auto !important;
+  grid-template-columns: minmax(0, 1.02fr) minmax(300px, .78fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 58px);
+  text-align: left;
+}
+
+.block-shell.has-side-media.media-side-left {
+  grid-template-columns: minmax(300px, .78fr) minmax(0, 1.02fr);
+}
+
+.block-shell.has-side-media.media-side-left .block-main {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.block-shell.has-side-media.media-side-left .floating-media-side {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.block-shell.has-side-media.media-side-right .block-main {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.block-shell.has-side-media.media-side-right .floating-media-side {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.has-side-media .hero-panel,
+.has-side-media .wide-statement,
+.has-side-media .quote-panel {
+  padding: clamp(24px, 3vw, 38px);
+}
+
+.has-side-media .display-title {
+  font-size: clamp(2rem, 4.15vw, 4rem);
+}
+
+.has-side-media .section-title {
+  font-size: clamp(1.65rem, 3vw, 2.7rem);
+}
+
+.floating-media-side {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  align-self: center;
+}
+
+.floating-media-side.floating-layout-single-wide,
+.floating-media-side.floating-layout-single-offset,
+.floating-media-side.floating-layout-single-cinematic {
+  display: block;
+  max-width: none;
+}
+
+.floating-media-side .floating-photo {
+  width: 100% !important;
+  transform: none !important;
+}
+
+.floating-media-side .floating-photo__surface,
+.floating-media-side.floating-layout-single-wide .floating-photo__surface,
+.floating-media-side.floating-layout-single-cinematic .floating-photo__surface {
+  min-height: clamp(330px, 48vh, 510px);
+  max-height: 56vh;
+  aspect-ratio: 4 / 5;
+}
+
+.floating-photo__surface.has-media,
+.media-card__surface.has-media {
+  background-size: 100% 100%, contain;
+  background-repeat: no-repeat;
+  background-position: center, center;
+  background-color: rgba(5, 8, 20, .9);
+}
+
+.photo-showcase-scene {
+  position: relative;
+}
+
+.photo-showcase__content {
+  width: min(1120px, 100%);
+  margin-inline: auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: center;
+  gap: clamp(20px, 3vh, 34px);
+  min-height: min(70vh, 720px) !important;
+}
+
+.photo-showcase__header {
+  width: min(760px, 100%);
+  display: grid;
+  gap: 10px;
+}
+
+.photo-showcase__header .body-copy {
+  margin: 0;
+}
+
+.floating-media-showcase {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  margin: 0;
+  align-self: center;
+}
+
+/* En una escena exclusiva las fotos dejan de superponerse para que todas sean legibles. */
+.photo-showcase__content .floating-layout-duo-overlap {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 0;
+  align-items: stretch;
+  gap: clamp(18px, 3vw, 34px);
+}
+
+.photo-showcase__content .floating-layout-duo-overlap .floating-photo-1,
+.photo-showcase__content .floating-layout-duo-overlap .floating-photo-2 {
+  grid-column: auto;
+  grid-row: auto;
+  transform: none;
+}
+
+.photo-showcase__content .floating-layout-duo-overlap .floating-photo__surface {
+  min-height: clamp(300px, 43vh, 430px);
+  max-height: 48vh;
+}
+
+.photo-showcase__content .floating-layout-trio {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-height: 0;
+  align-items: stretch;
+  gap: clamp(14px, 2vw, 24px);
+  overflow: visible;
+}
+
+.photo-showcase__content .floating-layout-trio .floating-photo {
+  transform: none;
+}
+
+.photo-showcase__content .floating-layout-trio .floating-photo__surface {
+  min-height: clamp(270px, 36vh, 360px);
+  max-height: 42vh;
+}
+
+.photo-showcase__content .floating-layout-single-wide,
+.photo-showcase__content .floating-layout-single-offset,
+.photo-showcase__content .floating-layout-single-cinematic {
+  grid-template-columns: 1fr;
+  max-width: 900px;
+  justify-self: center;
+}
+
+.photo-showcase__content .floating-layout-single-offset::after {
+  display: none;
+}
+
+.photo-showcase__content .floating-layout-single-offset .floating-photo,
+.photo-showcase__content .floating-layout-single-wide .floating-photo,
+.photo-showcase__content .floating-layout-single-cinematic .floating-photo {
+  grid-column: 1;
+  width: 100%;
+  justify-self: center;
+}
+
+.photo-showcase__content .floating-layout-single-wide .floating-photo__surface,
+.photo-showcase__content .floating-layout-single-offset .floating-photo__surface,
+.photo-showcase__content .floating-layout-single-cinematic .floating-photo__surface {
+  min-height: clamp(320px, 47vh, 470px);
+  max-height: 52vh;
+}
+
+.photo-showcase__content .floating-photo__caption {
+  max-width: calc(100% - 32px);
+}
+
+/* Las galerías que ya eran parte principal de una escena también aprovechan mejor el alto disponible. */
+.scene-layout-gallery .block-shell {
+  max-width: 1120px !important;
+}
+
+.scene-layout-gallery .floating-gallery {
+  align-items: stretch;
+}
+
+.scene-layout-gallery .floating-gallery .media-card,
+.scene-layout-gallery .floating-gallery .media-card__surface {
+  min-height: clamp(280px, 39vh, 400px);
+}
+
+@media (max-width: 1050px) {
+  .block-shell.has-side-media,
+  .block-shell.has-side-media.media-side-left {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, .68fr);
+    gap: 26px;
+  }
+
+  .floating-media-side .floating-photo__surface,
+  .floating-media-side.floating-layout-single-wide .floating-photo__surface,
+  .floating-media-side.floating-layout-single-cinematic .floating-photo__surface {
+    min-height: clamp(290px, 43vh, 430px);
+  }
+}
+
+@media (max-width: 820px) {
+  .block-shell.has-side-media,
+  .block-shell.has-side-media.media-side-left,
+  .block-shell.has-side-media.media-side-right {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 18px;
+  }
+
+  .block-shell.has-side-media .block-main,
+  .block-shell.has-side-media .floating-media-side {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .floating-media-side .floating-photo__surface,
+  .floating-media-side.floating-layout-single-wide .floating-photo__surface,
+  .floating-media-side.floating-layout-single-cinematic .floating-photo__surface {
+    min-height: 230px;
+    max-height: 34vh;
+    aspect-ratio: 16 / 9;
+  }
+
+  .photo-showcase__content .floating-layout-duo-overlap,
+  .photo-showcase__content .floating-layout-trio {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .photo-showcase__content .floating-layout-trio .floating-photo:nth-child(3) {
+    grid-column: 1 / -1;
+    width: 54%;
+    justify-self: center;
+  }
+}
+
+@media (max-width: 620px) {
+  .photo-showcase__content {
+    min-height: 64vh !important;
+  }
+
+  .photo-showcase__content .floating-layout-duo-overlap,
+  .photo-showcase__content .floating-layout-trio {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-showcase__content .floating-layout-duo-overlap .floating-photo,
+  .photo-showcase__content .floating-layout-trio .floating-photo,
+  .photo-showcase__content .floating-layout-trio .floating-photo:nth-child(3) {
+    display: block;
+    width: 100%;
+    grid-column: 1;
+  }
+
+  .photo-showcase__content .floating-layout-duo-overlap .floating-photo__surface,
+  .photo-showcase__content .floating-layout-trio .floating-photo__surface {
+    min-height: 190px;
+    max-height: 25vh;
+  }
+
+  .photo-showcase__content .floating-photo__caption span {
+    display: none;
+  }
+}

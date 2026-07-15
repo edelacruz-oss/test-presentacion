@@ -51,3 +51,33 @@ Valores útiles:
 ## Inicio
 
 Ejecuta `INICIAR_PRESENTACION.bat` o abre `index.html`.
+
+## Ajuste de interfaz pública
+
+- El temporizador fue eliminado de la pantalla principal.
+- El temporizador continúa disponible únicamente en `presenter.html`.
+- Las introducciones de cada sección ya no muestran la duración estimada en minutos.
+- Se conserva el nombre del presentador y la cantidad de bloques de la sección.
+
+## Evidencias fotográficas integradas
+
+La presentación incorpora una selección curada de fotografías del informe institucional. Se priorizaron las imágenes que aportan contexto a los logros y proyectos, evitando convertir cada escena en una galería.
+
+Las fotografías aparecen en composiciones flotantes con:
+
+- movimiento vertical suave y permanente;
+- profundidad mediante sombras y resplandor;
+- entrada y salida sincronizadas con el scroll cinematográfico;
+- composiciones individuales, dobles y triples;
+- adaptación para laptop y reducción automática en pantallas pequeñas.
+
+Para sustituir una imagen, reemplaza el archivo correspondiente dentro de `assets/` conservando exactamente el mismo nombre. Consulta `GUIA_FOTOS_FLOTANTES.md` para conocer la ubicación de cada fotografía.
+
+## Reubicación de fotografías
+
+La versión actual distribuye las fotografías de dos maneras:
+
+- **Lateral:** una imagen acompaña al contenido cuando existe espacio suficiente.
+- **Escena fotográfica:** varias imágenes reciben un momento independiente para garantizar que sean visibles en laptop.
+
+Consulta `GUIA_FOTOS_REUBICADAS.md` para personalizar cada escena.

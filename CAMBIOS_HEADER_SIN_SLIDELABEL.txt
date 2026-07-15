@@ -1,0 +1,5 @@
+CAMBIO DE HEADER
+
+- Se eliminó únicamente el slideLabel del encabezado público.
+- Se conservan sin cambios el nombre del capítulo, el nombre del presentador y los contadores.
+- No se modificó la pantalla del presentador ni el contenido de las secciones.
