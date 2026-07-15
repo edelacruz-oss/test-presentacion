@@ -13,6 +13,14 @@
    ======================================================================== */
 
 window.CEDRUS_PRESENTATION_CONFIG = {
+  editing: {
+    // false: presentación normal. true: inicia sin animación de desplazamiento.
+    quickModeDefault: false,
+
+    // Presiona esta tecla para activar o desactivar temporalmente el modo rápido.
+    shortcut: 'e'
+  },
+
   timing: {
     // Tiempo estándar para scroll, teclado y pantalla del presentador.
     standardTransitionDurationMs: 2400,

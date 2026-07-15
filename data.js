@@ -1,7 +1,7 @@
 window.PRESENTATION_DATA = {
   "meta": {
     "title": "Informe Anual de Actividades",
-    "subtitle": "Bachillerato Instituto Cedrus",
+    "subtitle": "Bachillerato INSTITUTO CEDRUS",
     "period": "Agosto 2025 — Junio 2026",
     "edition": "Experiencia inmersiva 2026",
     "organization": "Instituto Cedrus",
@@ -77,7 +77,7 @@ window.PRESENTATION_DATA = {
         {
           "layout": "statement",
           "eyebrow": "Nuestra historia",
-          "title": "Casi 14 años construyendo una comunidad educativa sólida, innovadora y humana.",
+          "title": "13 años construyendo una comunidad educativa sólida, innovadora y humana.",
           "body": "Cada ciclo representa una nueva oportunidad para formar jóvenes íntegros, preparados y comprometidos con su entorno.",
           "notes": [
             "Recordar que Instituto Cedrus nació con una visión clara: formar jóvenes íntegros y preparados académicamente.",
@@ -307,15 +307,18 @@ window.PRESENTATION_DATA = {
           "media": [
             {
               "key": "idiomas-londres-01",
-              "label": "Campus y experiencia estudiantil en Londres"
+              "label": "Campus y experiencia estudiantil en Londres",
+              "caption": ""
             },
             {
               "key": "idiomas-londres-02",
-              "label": "Clases, retos y medallas"
+              "label": "Clases, retos y medallas",
+              "caption": ""
             },
             {
               "key": "idiomas-intercambio-01",
-              "label": "Próximas experiencias internacionales"
+              "label": "Próximas experiencias internacionales",
+              "caption": ""
             }
           ],
           "caption": "Londres · 31 de marzo al 14 de abril",
@@ -414,12 +417,56 @@ window.PRESENTATION_DATA = {
             "Mencionar principios de accesibilidad universal en La Casa Ideal.",
             "Explicar que X-Plica integró Temas Selectos de Matemáticas y Cultura Digital, llevando al alumno de memorizar a enseñar."
           ],
-          "floatingLayout": "single-wide",
-          "floatingMedia": [
+          "floatingPlacement": "scene",
+          "floatingMediaGroups": [
             {
-              "key": "daco-casa-ideal",
-              "label": "La Casa Ideal",
-              "caption": "Diseño accesible, planos y propuesta arquitectónica."
+              "title": "Vida y muerte en las diferentes culturas",
+              "subtitle": "Piezas simbólicas y escultóricas inspiradas en distintas formas de comprender la vida, la muerte y lo sagrado.",
+              "layout": "duo-overlap",
+              "media": [
+                {
+                  "key": "daco-vida-muerte-01",
+                  "label": "Vida y muerte · equipo de proyecto",
+                  "caption": "Presentación de piezas simbólicas y trabajo colaborativo."
+                },
+                {
+                  "key": "daco-vida-muerte-02",
+                  "label": "Vida y muerte · exposición individual",
+                  "caption": "Interpretación artística de lo sagrado en distintas culturas."
+                }
+              ]
+            },
+            {
+              "title": "X‑Plica · dominio más allá del aula",
+              "subtitle": "Canales creados por los equipos para explicar matemáticas con autonomía, creatividad y claridad.",
+              "layout": "collage",
+              "media": [
+                {
+                  "key": "daco-xplica-01",
+                  "label": "Fórmula Secreta",
+                  "caption": "Canal creado por estudiantes dentro de X‑Plica."
+                },
+                {
+                  "key": "daco-xplica-02",
+                  "label": "BrainMath",
+                  "caption": "Aprendizaje explicado por los propios estudiantes."
+                },
+                {
+                  "key": "daco-xplica-03",
+                  "label": "Matebruticos",
+                  "caption": "Identidad visual construida para comunicar el contenido."
+                },
+                {
+                  "key": "daco-xplica-04",
+                  "label": "Matemágicos",
+                  "caption": "Creatividad digital aplicada a la explicación matemática."
+                },
+                {
+                  "key": "daco-xplica-05",
+                  "label": "Sin πedad",
+                  "caption": "Evidencia de dominio y apropiación del conocimiento."
+                }
+              ]
             }
           ]
         },
@@ -430,19 +477,19 @@ window.PRESENTATION_DATA = {
           "metrics": [
             {
               "value": "100 %",
-              "label": "consideró adecuada la dificultad"
+              "label": "Consideró adecuada la dificultad"
             },
             {
               "value": "9/10",
-              "label": "volvería a participar"
+              "label": "Volvería a participar"
             },
             {
               "value": "4,3/5",
-              "label": "valoración del trato docente"
+              "label": "Valoración del trato docente"
             },
             {
               "value": "4",
-              "label": "materias integraron Progrentis al proyecto"
+              "label": "Materias integraron Progrentis al proyecto"
             }
           ],
           "notes": [
@@ -630,25 +677,10 @@ window.PRESENTATION_DATA = {
             "Destacar que la academia consolidó una cultura de colaboración docente orientada a la mejora continua."
           ],
           "floatingPlacement": "scene",
-          "floatingLayout": "collage",
+          "floatingLayout": "duo-overlap",
           "floatingTitle": "Evidencias del Proyecto Integrador",
           "floatingSubtitle": "Presentaciones, stands y defensa de propuestas que dieron vida a las capacitaciones del área.",
           "floatingMedia": [
-            {
-              "key": "economico-proyecto-taak",
-              "label": "Taak Couture",
-              "caption": "Propuesta de marca y comunicación."
-            },
-            {
-              "key": "economico-presentacion",
-              "label": "Presentación ejecutiva",
-              "caption": "Defensa de ideas frente a sinodales."
-            },
-            {
-              "key": "economico-encuentro",
-              "label": "Encuentro interinstitucional",
-              "caption": "Aprendizaje basado en retos y exposición."
-            },
             {
               "key": "economico-extra-01",
               "label": "Exposición de proyectos",
@@ -793,17 +825,42 @@ window.PRESENTATION_DATA = {
             "El debate interno reunió siete preparatorias invitadas con dos equipos cada una.",
             "Talento Transformador reconoció propuestas innovadoras ante retos actuales de México."
           ],
-          "floatingLayout": "duo-overlap",
-          "floatingMedia": [
+          "floatingLayout": "collage",
+          "floatingPlacement": "scene",
+          "floatingMediaGroups": [
             {
-              "key": "sociales-debate",
-              "label": "Debate académico",
-              "caption": "Argumentación y respuesta en un contexto competitivo."
+              "title": "Evidencias que dan contexto",
+              "subtitle": "Momentos destacados de Voces que transforman.",
+              "layout": "duo-overlap",
+              "media": [
+                {
+                  "key": "sociales-debate",
+                  "label": "Debate académico",
+                  "caption": "Argumentación y respuesta en un contexto competitivo."
+                },
+                {
+                  "key": "sociales-logro",
+                  "label": "Encuentro entre preparatorias",
+                  "caption": "Participación, diálogo y resultados."
+                }
+              ]
             },
             {
-              "key": "sociales-logro",
-              "label": "Encuentro entre preparatorias",
-              "caption": "Participación, diálogo y resultados."
+              "title": "Reconocimientos y experiencias en el Tec de Monterrey",
+              "subtitle": "Participación académica, visitas y logros que fortalecieron la expresión, el análisis y el liderazgo estudiantil.",
+              "layout": "collage",
+              "media": [
+                {
+                  "key": "sociales-tec-visita-01",
+                  "label": "Experiencia en el Tec de Monterrey",
+                  "caption": "Participación en actividades académicas y formativas."
+                },
+                {
+                  "key": "sociales-tec-reconocimiento-02",
+                  "label": "Talento Transformador",
+                  "caption": "Reconocimiento a propuestas con impacto social."
+                }
+              ]
             }
           ]
         },
@@ -967,6 +1024,27 @@ window.PRESENTATION_DATA = {
           "notes": [
             "Presentar la elección del Consejo Estudiantil como experiencia práctica de organización, compromiso y sentido de pertenencia.",
             "Mencionar la participación de las planillas de Luis Ángel Beltrán y Mónica Pasquel Mixtega."
+          ],
+          "floatingPlacement": "scene",
+          "floatingLayout": "collage",
+          "floatingTitle": "Democracia estudiantil en acción",
+          "floatingSubtitle": "Registro del proceso electoral acompañado por el Instituto Estatal Electoral de Hidalgo.",
+          "floatingMedia": [
+            {
+              "key": "mentoria-eleccion-01",
+              "label": "Emisión del voto",
+              "caption": "Participación responsable en un proceso democrático escolar."
+            },
+            {
+              "key": "mentoria-eleccion-02",
+              "label": "Organización electoral",
+              "caption": "Materiales, registro y acompañamiento del proceso."
+            },
+            {
+              "key": "mentoria-eleccion-03",
+              "label": "Participación estudiantil",
+              "caption": "Una experiencia práctica de ciudadanía y liderazgo."
+            }
           ]
         },
         {
@@ -976,7 +1054,7 @@ window.PRESENTATION_DATA = {
           "metrics": [
             {
               "value": "5",
-              "label": "secundarias con convenio de promoción"
+              "label": "Secundarias con convenio de promoción"
             },
             {
               "value": "1",
@@ -984,16 +1062,42 @@ window.PRESENTATION_DATA = {
             },
             {
               "value": "4",
-              "label": "ámbitos de acompañamiento integral"
+              "label": "Ámbitos de acompañamiento integral"
             },
             {
               "value": "360°",
-              "label": "comunicación alumno–docente–familia"
+              "label": "Comunicación alumno–docente–familia"
             }
           ],
           "notes": [
             "Mencionar Instituto Las Torres Siglo XXI, Alejandro Magno, Colegio Británico, Colegio Hidalgo y Real Motolinía.",
             "Explicar que Día Cedrus permitió a alumnos de secundaria vivir clases en las capacitaciones para el trabajo."
+          ],
+          "floatingPlacement": "scene",
+          "floatingLayout": "collage",
+          "floatingTitle": "Promoción, convenios y continuidad",
+          "floatingSubtitle": "Alianzas y acciones que acercaron la experiencia Cedrus a nuevas comunidades educativas.",
+          "floatingMedia": [
+            {
+              "key": "mentoria-promocion-01",
+              "label": "Convenio institucional",
+              "caption": "Fortalecimiento de vínculos para ampliar oportunidades."
+            },
+            {
+              "key": "mentoria-promocion-02",
+              "label": "Firma de colaboración",
+              "caption": "Trabajo conjunto con instituciones de nivel secundaria."
+            },
+            {
+              "key": "mentoria-promocion-03",
+              "label": "Coordinación académica",
+              "caption": "Planeación y seguimiento de acciones de promoción."
+            },
+            {
+              "key": "mentoria-promocion-04",
+              "label": "Acompañamiento institucional",
+              "caption": "Comunicación y continuidad para futuros ingresos."
+            }
           ]
         }
       ]
@@ -1025,11 +1129,6 @@ window.PRESENTATION_DATA = {
             {
               "layout": "collage",
               "media": [
-                {
-                  "key": "aladdin-escenario",
-                  "label": "Aladdín · panorama escénico",
-                  "caption": "El montaje final como experiencia colectiva."
-                },
                 {
                   "key": "aladdin-escena-01",
                   "label": "Aladdín · escena principal",
@@ -1125,6 +1224,42 @@ window.PRESENTATION_DATA = {
           "notes": [
             "Agradecer a las universidades y ponentes que aportaron herramientas a las familias.",
             "Cerrar con la idea de que educar también es acompañar, escuchar, inspirar y construir comunidad."
+          ],
+          "floatingPlacement": "scene",
+          "floatingLayout": "collage",
+          "floatingTitle": "Familia, escuela y aliados en acción",
+          "floatingSubtitle": "Evidencias de talleres, conferencias y espacios de acompañamiento para madres y padres de familia.",
+          "floatingMedia": [
+            {
+              "key": "familias-evidencia-01",
+              "label": "Taller para familias",
+              "caption": "Participación y reflexión en comunidad."
+            },
+            {
+              "key": "familias-evidencia-02",
+              "label": "Acompañamiento a madres y padres",
+              "caption": "Herramientas para fortalecer el diálogo familiar."
+            },
+            {
+              "key": "familias-evidencia-03",
+              "label": "Conferencia con especialistas",
+              "caption": "Orientación y formación con apoyo de aliados."
+            },
+            {
+              "key": "familias-evidencia-04",
+              "label": "Participación de las familias",
+              "caption": "Construcción de vínculos entre escuela y hogar."
+            },
+            {
+              "key": "familias-evidencia-05",
+              "label": "Espacio formativo",
+              "caption": "Estrategias para acompañar la adolescencia."
+            },
+            {
+              "key": "familias-evidencia-06",
+              "label": "Reconocimiento a la participación",
+              "caption": "Colaboración entre institución, familias y especialistas."
+            }
           ]
         }
       ]
@@ -1172,6 +1307,16 @@ window.PRESENTATION_DATA = {
           ],
           "notes": [
             "Introducir los tres ejes antes de explicar su evolución y alcance."
+          ],
+          "floatingPlacement": "side",
+          "floatingSide": "left",
+          "floatingLayout": "single-cinematic",
+          "floatingMedia": [
+            {
+              "key": "psicopedagogia-ejes-accion",
+              "label": "Acompañamiento integral",
+              "caption": "Orientación vocacional y acercamiento a experiencias universitarias."
+            }
           ]
         },
         {
@@ -1220,19 +1365,19 @@ window.PRESENTATION_DATA = {
           "metrics": [
             {
               "value": "6",
-              "label": "participantes en diplomado gerencial EBC"
+              "label": "Participantes en diplomado gerencial EBC"
             },
             {
               "value": "4",
-              "label": "participantes en Marketing Educativo EBC"
+              "label": "Participantes en Marketing Educativo EBC"
             },
             {
               "value": "2",
-              "label": "estrategias de calidad docente"
+              "label": "Estrategias de calidad docente"
             },
             {
               "value": "3",
-              "label": "momentos de orientación vocacional"
+              "label": "Momentos de orientación vocacional"
             }
           ],
           "notes": [
@@ -1240,46 +1385,65 @@ window.PRESENTATION_DATA = {
             "Mencionar el taller Escuelas que Aprenden: Marketing Educativo, febrero 2026."
           ],
           "floatingLayout": "collage",
-          "floatingMedia": [
-            {
-              "key": "psicopedagogia-formacion",
-              "label": "Formación continua",
-              "caption": "Desarrollo docente y liderazgo transformador."
-            },
-            {
-              "key": "capacitaciones-01",
-              "label": "Capacitación institucional",
-              "caption": "Participación activa del equipo en espacios de actualización."
-            },
-            {
-              "key": "capacitaciones-02",
-              "label": "Conferencia / taller",
-              "caption": "Aprendizaje aplicado a la práctica educativa."
-            },
-            {
-              "key": "capacitaciones-03",
-              "label": "Trabajo académico",
-              "caption": "Análisis, reflexión y toma de notas."
-            },
-            {
-              "key": "capacitaciones-04",
-              "label": "Cierre de formación",
-              "caption": "Experiencia compartida y construcción de equipo."
-            },
-            {
-              "key": "capacitaciones-05",
-              "label": "Audiencia estudiantil",
-              "caption": "Seguimiento a experiencias de orientación y formación."
-            },
-            {
-              "key": "capacitaciones-06",
-              "label": "Aprendizaje con aliados",
-              "caption": "Vinculación con instituciones para fortalecer capacidades."
-            }
-          ],
           "floatingPlacement": "scene",
           "floatingTitle": "Capacitaciones y formación continua",
-          "floatingSubtitle": "Espacios de actualización, liderazgo y acompañamiento que fortalecieron la calidad docente e institucional."
+          "floatingSubtitle": "Evidencias del programa de capacitación docente, talleres, conferencias y formación con instituciones aliadas.",
+          "floatingMediaGroups": [
+            {
+              "title": "Capacitación docente · 1/2",
+              "subtitle": "Actualización metodológica, trabajo colegiado y formación institucional.",
+              "layout": "collage",
+              "media": [
+                {
+                  "key": "capacitacion-correcta-01",
+                  "label": "Reconocimiento de formación",
+                  "caption": "Participación en procesos de actualización profesional."
+                },
+                {
+                  "key": "capacitacion-correcta-02",
+                  "label": "Trabajo colegiado",
+                  "caption": "Experiencias de capacitación y construcción de equipo."
+                },
+                {
+                  "key": "capacitacion-correcta-03",
+                  "label": "Formación institucional",
+                  "caption": "Colaboradores reunidos en un espacio de actualización."
+                },
+                {
+                  "key": "capacitacion-correcta-04",
+                  "label": "Conferencia especializada",
+                  "caption": "Herramientas metodológicas y pedagógicas para el aula."
+                }
+              ]
+            },
+            {
+              "title": "Capacitación docente · 2/2",
+              "subtitle": "Diplomados, talleres prácticos y reconocimiento al desarrollo profesional.",
+              "layout": "collage",
+              "media": [
+                {
+                  "key": "capacitacion-correcta-05",
+                  "label": "Taller práctico",
+                  "caption": "Intercambio de estrategias para fortalecer la práctica educativa."
+                },
+                {
+                  "key": "capacitacion-correcta-06",
+                  "label": "Formación EBC",
+                  "caption": "Participación en programas de desarrollo y liderazgo."
+                },
+                {
+                  "key": "capacitacion-correcta-07",
+                  "label": "Entrega de reconocimiento",
+                  "caption": "Cierre de un proceso de capacitación profesional."
+                },
+                {
+                  "key": "capacitacion-correcta-08",
+                  "label": "Reconocimiento académico",
+                  "caption": "Constancia del compromiso con la formación continua."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1311,6 +1475,16 @@ window.PRESENTATION_DATA = {
           "notes": [
             "El éxito no se mide únicamente por actividades, sino por las personas transformadas.",
             "Presentar el propósito: formar jóvenes que comprendan que el liderazgo auténtico nace del servicio."
+          ],
+          "floatingPlacement": "side",
+          "floatingSide": "left",
+          "floatingLayout": "single-cinematic",
+          "floatingMedia": [
+            {
+              "key": "voluntariado-servir-por-amor",
+              "label": "Servir por Amor",
+              "caption": "Identidad del voluntariado Cedrus y filosofía de servicio."
+            }
           ]
         },
         {
@@ -1343,17 +1517,52 @@ window.PRESENTATION_DATA = {
             "Mencionar AMANC, refugios de animales, comunidad El Saucillo, Hospital General y Voluntariado Tibetcito.",
             "Destacar Tapatón, Vístete de Rosa, acopio de croquetas, campañas de higiene y ventas con causa."
           ],
-          "floatingLayout": "duo-overlap",
-          "floatingMedia": [
+          "floatingLayout": "collage",
+          "floatingPlacement": "scene",
+          "floatingMediaGroups": [
             {
-              "key": "voluntariado-comunidad",
-              "label": "Servicio comunitario",
-              "caption": "Empatía, presencia y acción con propósito."
+              "title": "Servicio con propósito",
+              "subtitle": "Acciones de cercanía, apoyo y vinculación con comunidades e instituciones.",
+              "layout": "duo-overlap",
+              "media": [
+                {
+                  "key": "voluntariado-comunidad",
+                  "label": "Servicio comunitario",
+                  "caption": "Empatía, presencia y acción con propósito."
+                },
+                {
+                  "key": "voluntariado-hospital",
+                  "label": "Apoyo solidario",
+                  "caption": "Acciones cercanas a necesidades reales."
+                }
+              ]
             },
             {
-              "key": "voluntariado-hospital",
-              "label": "Apoyo solidario",
-              "caption": "Acciones cercanas a necesidades reales."
+              "title": "Más momentos de Servir por Amor",
+              "subtitle": "Convivencia, acompañamiento y entrega solidaria en experiencias que transformaron a estudiantes y beneficiarios.",
+              "layout": "collage",
+              "media": [
+                {
+                  "key": "voluntariado-extra-01",
+                  "label": "Convivencia comunitaria",
+                  "caption": "Actividades pensadas para compartir tiempo y presencia."
+                },
+                {
+                  "key": "voluntariado-extra-02",
+                  "label": "Acompañamiento cercano",
+                  "caption": "Servicio, empatía y aprendizaje humano."
+                },
+                {
+                  "key": "voluntariado-extra-03",
+                  "label": "Comunidad Servir por Amor",
+                  "caption": "Voluntarios y beneficiarios reunidos en una misma causa."
+                },
+                {
+                  "key": "voluntariado-extra-04",
+                  "label": "Entrega solidaria",
+                  "caption": "Acciones sencillas con impacto directo en la comunidad."
+                }
+              ]
             }
           ]
         },
@@ -1541,14 +1750,6 @@ window.PRESENTATION_DATA = {
           "notes": [
             "Explicar que los convenios amplían acceso, calidad, competencias, prestigio y oportunidades de beca.",
             "No detenerse en todas las condiciones; presentar los beneficios más representativos."
-          ],
-          "floatingLayout": "single-offset",
-          "floatingMedia": [
-            {
-              "key": "vinculacion-convenio",
-              "label": "Alianzas institucionales",
-              "caption": "Puentes que amplían las oportunidades de los estudiantes."
-            }
           ]
         },
         {
@@ -1558,27 +1759,27 @@ window.PRESENTATION_DATA = {
           "metrics": [
             {
               "value": "75",
-              "label": "prospectos únicos atendidos"
+              "label": "Prospectos únicos atendidos"
             },
             {
               "value": "45",
-              "label": "inscripciones concretadas"
+              "label": "Inscripciones concretadas"
             },
             {
               "value": "81,8 %",
-              "label": "conversión de procesos definidos"
+              "label": "Conversión de procesos definidos"
             },
             {
               "value": "10",
-              "label": "no inscritos"
+              "label": "No inscritos"
             },
             {
               "value": "19",
-              "label": "procesos sin respuesta final"
+              "label": "Procesos sin respuesta final"
             },
             {
               "value": "1.º",
-              "label": "semestre con mayor concentración de interés"
+              "label": "Semestre con mayor concentración de interés"
             }
           ],
           "notes": [
@@ -1673,7 +1874,7 @@ window.PRESENTATION_DATA = {
         },
         {
           "layout": "finale",
-          "title": "Gracias por creer en Cedrus.",
+          "title": "Gracias por creer en Bachillerato Cedrus.",
           "subtitle": "Lo mejor, estamos seguros, todavía está por venir.",
           "label": "Instituto Cedrus · Bachillerato 2025–2026",
           "notes": [

@@ -1939,3 +1939,568 @@ html.cinematic-scroll-active body {
     display: none;
   }
 }
+
+
+/* =========================================================
+   AJUSTE ESPECÍFICO · 12.05 ADMISIONES
+   Centra seis tarjetas en una cuadrícula 3 × 2 para evitar
+   que el contenido se comprima en pantallas de laptop.
+   ========================================================= */
+.scene-vinculacion-05 .metrics-grid {
+  grid-template-columns: repeat(3, minmax(190px, 240px));
+  justify-content: center;
+  align-items: stretch;
+  width: min(100%, 820px);
+  margin-inline: auto;
+}
+
+.scene-vinculacion-05 .metric-card {
+  min-height: 168px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.scene-vinculacion-05 .metric-card span {
+  max-width: 22ch;
+}
+
+@media (max-width: 880px) {
+  .scene-vinculacion-05 .metrics-grid {
+    grid-template-columns: repeat(2, minmax(180px, 250px));
+    width: min(100%, 560px);
+  }
+}
+
+@media (max-width: 560px) {
+  .scene-vinculacion-05 .metrics-grid {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   AJUSTES ESPECÍFICOS · 09.04 / 10.02
+   ========================================================= */
+
+/* Seis evidencias en dos filas, todas visibles dentro de una pantalla de laptop. */
+.photo-showcase__content .floating-layout-collage.floating-count-6 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.photo-showcase__content .floating-layout-collage.floating-count-6 .floating-photo,
+.photo-showcase__content .floating-layout-collage.floating-count-6 .floating-photo:nth-child(1),
+.photo-showcase__content .floating-layout-collage.floating-count-6 .floating-photo:nth-child(4) {
+  grid-column: auto;
+}
+
+.photo-showcase__content .floating-layout-collage.floating-count-6 .floating-photo__surface,
+.photo-showcase__content .floating-layout-collage.floating-count-6 .floating-photo:nth-child(1) .floating-photo__surface,
+.photo-showcase__content .floating-layout-collage.floating-count-6 .floating-photo:nth-child(4) .floating-photo__surface {
+  min-height: clamp(170px, 21vh, 245px);
+  max-height: 26vh;
+}
+
+/* En 10.02 la fotografía queda a la izquierda y los tres ejes se leen en vertical. */
+.scene-psicopedagogia-02 .block-shell.has-side-media {
+  grid-template-columns: minmax(300px, .82fr) minmax(0, 1.18fr);
+  max-width: 1180px !important;
+}
+
+.scene-psicopedagogia-02 .pillars-grid {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.scene-psicopedagogia-02 .pillar-card {
+  padding: 16px 18px;
+}
+
+.scene-psicopedagogia-02 .floating-media-side .floating-photo__surface {
+  min-height: clamp(330px, 50vh, 500px);
+  max-height: 56vh;
+}
+
+@media (max-width: 820px) {
+  .photo-showcase__content .floating-layout-collage.floating-count-6 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .scene-psicopedagogia-02 .block-shell.has-side-media {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   MODO EDICIÓN RÁPIDA
+   Se activa con la tecla E. Solo elimina la transición de scroll;
+   el diseño y el contenido permanecen intactos.
+   ========================================================= */
+.quick-edit-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 9999;
+  max-width: min(90vw, 520px);
+  padding: 12px 18px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(5, 8, 22, .82);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .34);
+  backdrop-filter: blur(16px) saturate(135%);
+  font-size: .82rem;
+  font-weight: 650;
+  letter-spacing: .01em;
+  opacity: 0;
+  transform: translate(-50%, 14px);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.quick-edit-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.quick-edit-mode .live-dot {
+  animation: none;
+  box-shadow: 0 0 0 5px rgba(var(--accent-rgb), .12);
+}
+
+/* =========================================================
+   PANTALLA INICIAL · INDICACIONES GENERALES
+   ========================================================= */
+html.instructions-active,
+html.instructions-active body {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+.topbar {
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.8,.2,1);
+}
+
+html.instructions-active .topbar {
+  opacity: 0;
+  transform: translateY(-24px);
+  pointer-events: none;
+}
+
+.instruction-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: clamp(20px, 3vw, 44px);
+  overflow: hidden;
+  color: #f6f8ff;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(82, 165, 54, .17), transparent 30%),
+    radial-gradient(circle at 84% 26%, rgba(117, 150, 255, .14), transparent 32%),
+    linear-gradient(145deg, #02040b 0%, #060a18 52%, #03050c 100%);
+  transition: opacity 700ms ease, visibility 700ms ease;
+}
+
+.instruction-gate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .18;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, #000 0%, transparent 75%);
+}
+
+.instruction-gate.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.instruction-gate__aurora {
+  position: absolute;
+  width: min(46vw, 680px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(88px);
+  opacity: .24;
+  pointer-events: none;
+  animation: instruction-aurora 10s ease-in-out infinite alternate;
+}
+
+.instruction-gate__aurora--one {
+  left: -12%;
+  bottom: -34%;
+  background: rgba(82, 165, 54, .68);
+}
+
+.instruction-gate__aurora--two {
+  right: -12%;
+  top: -34%;
+  background: rgba(76, 118, 255, .56);
+  animation-delay: -4s;
+}
+
+.instruction-gate__shell {
+  position: relative;
+  z-index: 2;
+  width: min(1180px, 96vw);
+  max-height: calc(100vh - 36px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "brand brand"
+    "heading actions"
+    "visual visual";
+  gap: clamp(16px, 2.2vh, 26px) clamp(26px, 4vw, 52px);
+  padding: clamp(24px, 3vw, 40px);
+  overflow: auto;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: clamp(28px, 3vw, 42px);
+  background: linear-gradient(160deg, rgba(10,15,31,.92), rgba(5,8,19,.76));
+  box-shadow: 0 40px 120px rgba(0,0,0,.52), 0 0 80px rgba(82,165,54,.05);
+  backdrop-filter: blur(24px) saturate(140%);
+  animation: instruction-shell-in 900ms cubic-bezier(.16,.84,.22,1) both;
+  transition: opacity 420ms ease, transform 520ms cubic-bezier(.2,.8,.2,1), filter 420ms ease;
+}
+
+
+.instruction-gate__shell {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.instruction-gate__shell::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.instruction-gate.is-loading .instruction-gate__shell {
+  opacity: 0;
+  transform: scale(.96);
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.instruction-gate__brand {
+  grid-area: brand;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.instruction-gate__brand img {
+  width: clamp(84px, 9vw, 116px);
+  height: 60px;
+  object-fit: contain;
+  padding: 6px 8px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(0,0,0,.78), rgba(8,12,22,.95));
+  box-shadow: 0 14px 34px rgba(0,0,0,.34), inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+.instruction-gate__brand div { display: grid; gap: 4px; }
+.instruction-gate__brand strong { font-size: .88rem; letter-spacing: .18em; }
+.instruction-gate__brand span { color: rgba(231,236,255,.58); font-size: .69rem; letter-spacing: .13em; }
+
+.instruction-gate__heading { grid-area: heading; display: grid; gap: 10px; }
+.instruction-gate__eyebrow { color: #a6db8f; font-size: .72rem; font-weight: 700; letter-spacing: .22em; }
+.instruction-gate__heading h1 { margin: 0; font-size: clamp(2.3rem, 4.4vw, 4.8rem); line-height: .92; letter-spacing: -.05em; }
+.instruction-gate__heading p {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(233,238,255,.72);
+  font-size: clamp(.94rem, 1.2vw, 1.08rem);
+  line-height: 1.58;
+}
+.instruction-gate__heading p strong { color: #ffffff; }
+
+.instruction-gate__actions { grid-area: actions; display: grid; justify-items: end; align-content: start; gap: 10px; }
+.start-presentation-button {
+  position: relative;
+  min-width: 200px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 17px 24px;
+  overflow: hidden;
+  border: 1px solid rgba(170,225,145,.45);
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(82,165,54,.95), rgba(50,115,30,.92));
+  box-shadow: 0 20px 50px rgba(46,111,28,.34), inset 0 1px 0 rgba(255,255,255,.24);
+  font-weight: 750;
+  letter-spacing: .18em;
+  transition: transform 280ms ease, box-shadow 280ms ease, filter 280ms ease;
+}
+.start-presentation-button::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.28) 46%, transparent 72%);
+  transform: translateX(-120%);
+  animation: instruction-button-shine 3.2s ease-in-out infinite;
+}
+.start-presentation-button > span { position: relative; z-index: 1; }
+.start-presentation-button:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.08); box-shadow: 0 26px 66px rgba(46,111,28,.44), inset 0 1px 0 rgba(255,255,255,.3); }
+.start-presentation-button:active { transform: translateY(0) scale(.98); }
+.start-presentation-button:disabled { cursor: wait; opacity: .72; }
+.start-presentation-button__arrow { font-size: 1.35rem; transition: transform 260ms ease; }
+.start-presentation-button:hover .start-presentation-button__arrow { transform: translateX(5px); }
+.instruction-gate__actions small { max-width: 250px; text-align: right; color: rgba(230,236,255,.48); font-size: .72rem; line-height: 1.45; }
+
+.instruction-gate__visual {
+  grid-area: visual;
+  position: relative;
+  display: grid;
+  gap: clamp(16px, 2vw, 22px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.instruction-card {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding: clamp(18px, 2vw, 24px);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025)),
+    radial-gradient(circle at top right, rgba(var(--accent-rgb), .10), transparent 38%);
+  box-shadow: 0 22px 60px rgba(0,0,0,.28);
+  overflow: hidden;
+  isolation: isolate;
+  animation: instruction-card-float 6.8s ease-in-out infinite;
+}
+.instruction-card:nth-child(2) { animation-delay: -1.8s; }
+.instruction-card:nth-child(3) { animation-delay: -3.5s; }
+.instruction-card::before {
+  content: "";
+  position: absolute;
+  inset: auto -20% -40% auto;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: .15;
+  z-index: -1;
+}
+.instruction-card--mute::before { background: rgba(255, 90, 90, .8); }
+.instruction-card--discretion::before { background: rgba(82,165,54,.9); }
+.instruction-card--attention::before { background: rgba(88,130,255,.8); }
+
+.instruction-card__icon {
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 14px 34px rgba(0,0,0,.28);
+}
+.instruction-card__icon svg {
+  width: 58px;
+  height: 58px;
+  fill: none;
+  stroke: rgba(255,255,255,.88);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.instruction-card__icon .icon-fill { fill: rgba(255,255,255,.88); stroke: none; }
+.instruction-card__icon .fill-dot { fill: rgba(255,255,255,.88); stroke: none; }
+.instruction-card__icon .icon-accent { stroke: #ff7272; stroke-width: 3; }
+.instruction-card--discretion .icon-accent { stroke: #a6db8f; }
+.instruction-card--attention .icon-accent { stroke: #88a5ff; }
+
+.instruction-card__content { display: grid; gap: 10px; }
+.instruction-card__content strong {
+  font-size: clamp(1.28rem, 1.6vw, 1.55rem);
+  line-height: 1.05;
+  letter-spacing: -.03em;
+}
+.instruction-card__content p {
+  margin: 0;
+  color: rgba(232,236,255,.7);
+  line-height: 1.6;
+  font-size: .96rem;
+}
+
+.instruction-loader {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: scale(.92);
+  pointer-events: none;
+  transition: opacity 480ms ease, transform 620ms cubic-bezier(.2,.8,.2,1);
+}
+.instruction-gate.is-loading .instruction-loader { opacity: 1; transform: scale(1); }
+.instruction-loader__mark { position: relative; width: 156px; height: 156px; display: grid; place-items: center; }
+.instruction-loader__mark img {
+  width: 96px;
+  height: 64px;
+  object-fit: contain;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(0,0,0,.78), rgba(8,12,22,.95));
+  box-shadow: 0 18px 44px rgba(0,0,0,.4);
+}
+.instruction-loader__ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(255,255,255,.12); }
+.instruction-loader__ring--outer { border-top-color: rgba(147,216,117,.95); border-right-color: rgba(147,216,117,.3); animation: instruction-ring-spin 1.3s linear infinite; }
+.instruction-loader__ring--inner { inset: 16px; border-bottom-color: rgba(135,162,255,.92); border-left-color: rgba(135,162,255,.28); animation: instruction-ring-spin 1.7s linear infinite reverse; }
+.instruction-loader strong { font-size: clamp(1.1rem, 2vw, 1.5rem); letter-spacing: -.015em; }
+.instruction-loader > span { color: rgba(233,238,255,.62); font-size: .85rem; }
+.instruction-loader__bar { width: min(320px, 70vw); height: 4px; margin-top: 12px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.1); }
+.instruction-loader__bar i { display: block; width: 100%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #52a536, #a6db8f, #668cff); transform: scaleX(0); transform-origin: left; }
+.instruction-gate.is-loading .instruction-loader__bar i { animation: instruction-load-bar 1.65s cubic-bezier(.2,.75,.2,1) both; }
+
+@keyframes instruction-shell-in {
+  from { opacity: 0; transform: translateY(34px) scale(.975); filter: blur(12px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+@keyframes instruction-aurora { from { transform: translate3d(-3%, 2%, 0) scale(.92); } to { transform: translate3d(6%, -5%, 0) scale(1.08); } }
+@keyframes instruction-button-shine { 0%, 58% { transform: translateX(-130%); } 80%, 100% { transform: translateX(130%); } }
+@keyframes instruction-ring-spin { to { transform: rotate(360deg); } }
+@keyframes instruction-load-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes instruction-card-float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+
+@media (max-width: 980px) {
+  .instruction-gate__shell {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "brand"
+      "heading"
+      "actions"
+      "visual";
+  }
+  .instruction-gate__actions { justify-items: start; }
+  .instruction-gate__actions small { text-align: left; max-width: none; }
+  .instruction-gate__visual { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .instruction-gate { padding: 12px; }
+  .instruction-gate__shell {
+    width: 100%;
+    max-height: calc(100vh - 24px);
+    padding: 18px;
+    border-radius: 24px;
+    gap: 16px;
+  }
+  .instruction-gate__brand img { width: 76px; height: 54px; }
+  .instruction-gate__heading h1 { font-size: clamp(2rem, 10vw, 3.1rem); }
+  .instruction-card { padding: 18px; border-radius: 22px; }
+  .instruction-card__icon { width: 78px; height: 78px; border-radius: 20px; }
+  .instruction-card__icon svg { width: 50px; height: 50px; }
+  .start-presentation-button { width: 100%; min-width: 0; }
+  .instruction-loader__mark { width: 128px; height: 128px; }
+  .instruction-loader__mark img { width: 82px; height: 58px; }
+}
+
+/* =========================================================
+   AJUSTES FINALES DE RENDIMIENTO Y LOGOTIPO
+   ========================================================= */
+.brand-logo {
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .34));
+}
+
+.instruction-gate__brand img {
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .34));
+}
+
+.instruction-loader__mark img {
+  width: 78px;
+  height: 78px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .38));
+}
+
+/* Evita reservar capas de GPU para todos los elementos de las 90+ escenas. */
+.scroll-scrub-enabled .scroll-scene__content,
+.scroll-scrub-enabled .scroll-scene .reveal-item,
+.floating-photo__surface,
+.media-card__surface {
+  will-change: auto !important;
+}
+
+.scroll-scrub-enabled .scroll-scene.is-scrub-visible .scroll-scene__content,
+.scroll-scrub-enabled .scroll-scene.is-scrub-visible .reveal-item {
+  will-change: transform, opacity, filter !important;
+}
+
+.scroll-scrub-enabled .scroll-scene.is-scrub-visible .floating-photo__surface,
+.scroll-scrub-enabled .scroll-scene.is-scrub-visible .media-card__surface {
+  will-change: transform !important;
+}
+
+/* Las animaciones fotográficas solo trabajan en escenas visibles. */
+.scroll-scrub-enabled .scroll-scene .floating-photo,
+.scroll-scrub-enabled .scroll-scene .floating-photo__surface,
+.scroll-scrub-enabled .scroll-scene .media-card__surface {
+  animation-play-state: paused !important;
+}
+
+.scroll-scrub-enabled .scroll-scene.is-scrub-visible .floating-photo,
+.scroll-scrub-enabled .scroll-scene.is-scrub-visible .floating-photo__surface,
+.scroll-scrub-enabled .scroll-scene.is-scrub-visible .media-card__surface {
+  animation-play-state: running !important;
+}
+
+[data-media-hydrating="true"] {
+  filter: brightness(.88) saturate(.82);
+}
+
+.floating-photo__surface.has-media,
+.media-card__surface.has-media {
+  filter: none;
+  transition: filter 220ms ease;
+}
+
+@media (max-width: 760px) {
+  .brand-logo {
+    width: 44px;
+    height: 44px;
+  }
+
+  .instruction-gate__brand img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .instruction-loader__mark img {
+    width: 68px;
+    height: 68px;
+  }
+}

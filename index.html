@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="instructions-active">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,7 +18,7 @@
       <img class="brand-logo" src="assets/logo-cedrus.png" alt="Logo del Instituto Cedrus" />
       <span class="brand-copy">
         <strong>CEDRUS</strong>
-        <small>INFORME ANUAL · LANDING EXPERIENCE</small>
+        <small>INFORME ANUAL</small>
       </span>
     </div>
 
@@ -41,11 +41,104 @@
     </div>
   </header>
 
+
+  <section id="instructionGate" class="instruction-gate" aria-hidden="false">
+    <div class="instruction-gate__aurora instruction-gate__aurora--one" aria-hidden="true"></div>
+    <div class="instruction-gate__aurora instruction-gate__aurora--two" aria-hidden="true"></div>
+
+    <div class="instruction-gate__shell">
+      <div class="instruction-gate__brand">
+        <img src="assets/logo-cedrus.png" alt="Logo del Instituto Cedrus" />
+        <div>
+          <strong>INSTITUTO CEDRUS</strong>
+          <span>PRESENTACIÓN ANUAL</span>
+        </div>
+      </div>
+
+      <div class="instruction-gate__heading">
+        <span class="instruction-gate__eyebrow">ANTES DE COMENZAR</span>
+        <h1>Indicaciones<br />generales</h1>
+        <p>Para una mejor experiencia durante la presentación, agradecemos considerar estas indicaciones. Al finalizar, presiona <strong>Inicio</strong> para entrar a la portada principal.</p>
+      </div>
+
+      <div class="instruction-gate__actions">
+        <button id="startPresentationButton" class="start-presentation-button" type="button">
+          <span>INICIO</span>
+          <span class="start-presentation-button__arrow">→</span>
+        </button>
+      </div>
+
+      <div class="instruction-gate__visual instruction-cards-stage">
+        <article class="instruction-card instruction-card--mute">
+          <div class="instruction-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" role="img">
+              <rect x="18" y="7" width="28" height="50" rx="6" />
+              <line x1="26" y1="14" x2="38" y2="14" />
+              <circle cx="32" cy="49" r="2.2" class="fill-dot" />
+              <path d="M9 31h10l10-8v18l-10-8H9z" class="icon-fill" />
+              <line x1="42" y1="24" x2="54" y2="36" class="icon-accent" />
+              <line x1="54" y1="24" x2="42" y2="36" class="icon-accent" />
+            </svg>
+          </div>
+          <div class="instruction-card__content">
+            <strong>Celular en silencio</strong>
+            <p>Te invitamos a mantener tu dispositivo en modo silencioso para favorecer la concentración del público.</p>
+          </div>
+        </article>
+
+        <article class="instruction-card instruction-card--discretion">
+          <div class="instruction-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" role="img">
+              <path d="M12 10h18l14 9v35H12z" />
+              <path d="M12 10v35l18 9" />
+              <path d="M44 26c4 0 7 3 7 7v4" />
+              <path d="M40 53l8-16 6 3-8 14" class="icon-fill" />
+              <circle cx="44" cy="23" r="4" class="icon-fill" />
+            </svg>
+          </div>
+          <div class="instruction-card__content">
+            <strong>Entradas y salidas con discreción</strong>
+            <p>En caso de requerir moverte, pedimos hacerlo con el menor ruido posible y sin interrumpir la sesión.</p>
+          </div>
+        </article>
+
+        <article class="instruction-card instruction-card--attention">
+          <div class="instruction-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" role="img">
+              <circle cx="32" cy="32" r="24" />
+              <path d="M25 20c3 0 6 2 7 5 1 4-1 8-5 10-3 2-5 5-5 8" class="icon-fill" />
+              <path d="M40 25c5 2 8 6 9 12" />
+              <path d="M40 18c8 3 13 10 14 19" />
+              <line x1="18" y1="18" x2="46" y2="46" class="icon-accent" />
+            </svg>
+          </div>
+          <div class="instruction-card__content">
+            <strong>Atención plena</strong>
+            <p>Gracias por acompañarnos con tu atención. Cada momento fue preparado para compartirse con claridad y contexto.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="instruction-loader" aria-hidden="true">
+      <div class="instruction-loader__mark">
+        <span class="instruction-loader__ring instruction-loader__ring--outer"></span>
+        <span class="instruction-loader__ring instruction-loader__ring--inner"></span>
+        <img src="assets/logo-cedrus.png" alt="Logo del Instituto Cedrus" />
+      </div>
+      <strong>Preparando la experiencia</strong>
+      <span>Cargando portada y recursos visuales…</span>
+      <div class="instruction-loader__bar"><i></i></div>
+    </div>
+  </section>
+
   <main id="scrollRoot" class="scroll-root" aria-live="polite"></main>
 
   <div id="blackout" class="blackout" aria-hidden="true">
     <span>CEDRUS</span>
   </div>
+
+  <div id="quickEditToast" class="quick-edit-toast" aria-live="polite" aria-hidden="true"></div>
 
   <div id="shortcutHelp" class="shortcut-help" aria-hidden="true">
     <div>
@@ -55,11 +148,13 @@
       <span>F: pantalla completa</span>
       <span>P: presentador</span>
       <span>B: pantalla negra</span>
+      <span>E: activar/desactivar modo edición rápida</span>
       <span>H: ayuda</span>
     </div>
   </div>
 
   <script src="data.js"></script>
+  <script src="media-manifest.js"></script>
   <script src="configuracion.js"></script>
   <script src="cinematic-scroll.js"></script>
   <script src="app.js"></script>
